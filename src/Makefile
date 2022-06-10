@@ -2,10 +2,9 @@ IDIR=../include
 CC=gcc
 CFLAGS=-I$(IDIR)
 LIBS=
-ODIR=obj
-LDIR =../lib
-
-all: autostrata
+ODIR=../obj
+LDIR=../lib
+OUTPUTFILE=libautostrata.a
 
 _DEPS=autostrata.h structs.h
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -16,17 +15,27 @@ OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) $(DEBUG) -c -o $@ $< $(CFLAGS)
 
-all: autostrata
+$(OUTPUTFILE): $(OBJ)
+	ar ru $(LDIR)/$@ $^
+	ranlib $(LDIR)/$@
 
-autostrata: $(OBJ)
-	$(CC) $(DEBUG) -o $@ $^ -L$(LDIR) $(LIBS)
+.PHONY: all
+all: $(OUTPUTFILE)
 
-.PHONY: clean debug
-
+.PHONY: debug
 debug:
 	$(MAKE) $(MAKEFILE) DEBUG="-g"
 
-clean:
-	rm -rf $(ODIR)/*.o
+.PHONY: prof
+prof:
+	$(MAKE) $(MAKEFILE) DEBUG="-pg"
 
-$(shell mkdir -p $(ODIR))
+.PHONY: fast
+fast:
+	$(MAKE) $(MAKEFILE) DEBUG="-Ofast"
+
+.PHONY: clean
+clean:
+	rm -rf $(ODIR)/*.*
+
+$(shell mkdir -p $(ODIR) $(LDIR))
