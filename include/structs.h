@@ -1,5 +1,4 @@
-#ifndef STRUCTS_H
-#define STRUCTS_H
+#pragma once
 
 typedef struct unit {
     int id;
@@ -29,5 +28,3 @@ typedef struct varvals {
     int num_vars;
     valueseq_t *vars[0];
 } varvals_t;
-
-#endif

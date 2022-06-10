@@ -7,7 +7,7 @@ _DEPS=autostrata.h structs.h
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
 TESTSOBJ=tests.o
 
-%.o: %.c $(DEPS)
+%.o: %.c tests.h $(DEPS)
 	$(CC) $(DEBUG) -c -o $@ $< $(CFLAGS)
 
 tests: $(TESTSOBJ)
