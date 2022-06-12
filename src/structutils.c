@@ -27,3 +27,19 @@ int compare_values(const void *a, const void *b) {
     else
         return 0;
 }
+
+unitseq_t *alloc_unitseq(int num_units, int num_vals) {
+    size_t unit_size = sizeof(unit_t) + num_vals * sizeof(double);
+    unitseq_t *u = malloc(sizeof(unitseq_t) + num_units * unit_size);
+    u->unit_size = unit_size;
+    u->num_units = num_units;
+    u->num_vals = num_vals;
+}
+
+void free_unitseq(unitseq_t *u) {
+    free(u);
+}
+
+unit_t *get_unit(unitseq_t *unitseq, int index) {
+    return (unit_t *) &unitseq->units[index * unitseq->unit_size];
+}

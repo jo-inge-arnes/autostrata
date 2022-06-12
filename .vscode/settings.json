@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.rmd": "markdown",
+        "stratcache.h": "c",
+        "stashing.h": "c",
+        "structutilstests.h": "c"
+    }
+}

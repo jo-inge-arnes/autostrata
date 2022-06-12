@@ -1,11 +1,20 @@
 #pragma once
 
+#include <stddef.h>
+
 typedef struct unit {
     int id;
     int group_id;
     int stratum_id;
     double vals[0]; // Same size for all instances
 } unit_t;
+
+typedef struct unitseq {
+    int num_units;
+    int num_vals;
+    size_t unit_size;
+    char units[0];
+} unitseq_t;
 
 typedef struct stratum {
     int id;
