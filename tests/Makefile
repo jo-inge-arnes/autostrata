@@ -1,6 +1,6 @@
 IDIR=../include
 CC=gcc
-CFLAGS=-I$(IDIR)
+CFLAGS=-Wall -I$(IDIR)
 LDIR =../lib
 LIBS=-lautostrata
 _DEPS=autostrata.h structs.h

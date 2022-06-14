@@ -4,7 +4,7 @@
 
 #include "structutilstests.h"
 
-int test_sort_valueseq() {
+int test_sort_valueseq(void) {
     printf("test_sort_valueseq\n");
     int res = 0;
 
@@ -26,7 +26,7 @@ int test_sort_valueseq() {
     return res;
 }
 
-int test_unitseq_alloc() {
+int test_unitseq_alloc(void) {
     printf("test_unitseq_alloc\n");
     int res = 0;
 
@@ -54,6 +54,84 @@ int test_unitseq_alloc() {
     }
 
     free_unitseq(u);
+
+    return res;
+}
+
+int test_to_valueseq(void) {
+    printf("test_to_valueseq\n");
+    int res = 0;
+
+    const int num_units = 5;
+    const int num_vars = 3;
+    const int selected_var = 1;
+
+    unitseq_t *u = alloc_unitseq(num_units, num_vars);
+    for (int i = 0; i < num_units; i++)
+        get_unit(u, i)->id = i;
+
+    get_unit(u, 0)->vals[selected_var] = 5.0;
+    get_unit(u, 1)->vals[selected_var] = 3.0;
+    get_unit(u, 2)->vals[selected_var] = 5.0;
+    get_unit(u, 3)->vals[selected_var] = 1.0;
+    get_unit(u, 4)->vals[selected_var] = 1.0;
+
+    valueseq_t *v = to_valueseq(u, selected_var);
+
+    if (v->len != 3) {
+        res--;
+        printf("\twrong number of distinct values\n");
+    }
+
+    if (v->vals[0].num_units != 2) {
+        res--;
+        printf("\twrong number of units for index 0\n");
+    }
+
+    if (v->vals[1].num_units != 1) {
+        res--;
+        printf("\twrong number of units for index 1\n");
+    }
+
+    if (v->vals[2].num_units != 2) {
+        res--;
+        printf("\twrong number of units for index 2\n");
+    }
+
+    if (v->vals[0].val != 1.0) {
+        res--;
+        printf("\twrong value for index 0\n");
+    }
+
+    if (v->vals[1].val != 3.0) {
+        res--;
+        printf("\twrong value for index 1\n");
+    }
+
+    if (v->vals[2].val != 5.0) {
+        res--;
+        printf("\twrong value for index 2\n");
+    }
+
+    if (!((v->vals[0].unit_ids[0] == 3 && v->vals[0].unit_ids[1] == 4) ||
+         (v->vals[0].unit_ids[0] == 4 && v->vals[0].unit_ids[1] == 3))) {
+        res--;
+        printf("\twrong unit_ids for index 0\n");
+    }
+
+    if (v->vals[1].unit_ids[0] != 1) {
+        res--;
+        printf("\twrong unit_ids for index 1\n");
+    }
+
+    if (!((v->vals[2].unit_ids[0] == 0 && v->vals[2].unit_ids[1] == 2) ||
+         (v->vals[2].unit_ids[0] == 2 && v->vals[2].unit_ids[1] == 0))) {
+        res--;
+        printf("\twrong unit_ids for index 2\n");
+    }
+
+    free_unitseq(u);
+    free_valueseq(v);
 
     return res;
 }
