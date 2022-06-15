@@ -1,7 +1,7 @@
 IDIR=../include
 CC=gcc
 CFLAGS=-Wall -I$(IDIR)
-LIBS=
+LIBS=-lm
 ODIR=../obj
 LDIR=../lib
 OUTPUTFILE=libautostrata.a

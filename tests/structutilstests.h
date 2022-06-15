@@ -10,4 +10,6 @@ int test_sort_valueseq(void);
 int test_variablevals_alloc_and_free_when_vals_are_null(void);
 int test_variablevals_alloc_and_free_when_vals_are_allocated(void);
 
+int test_to_variablevals(void);
+
 

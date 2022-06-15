@@ -185,3 +185,9 @@ void free_variablevals(variablevals_t *varvals) {
     free(varvals);
 }
 
+variablevals_t *to_variablevars(const unitseq_t *const u) {
+    variablevals_t *varvals = alloc_variablevals(u->num_vals);
+    for (int i = 0; i < varvals->num_vars; i++)
+        varvals->vars[i] = to_valueseq(u, i);
+    return varvals;
+}

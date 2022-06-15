@@ -15,3 +15,4 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index);
 
 variablevals_t *alloc_variablevals(const int num_vars);
 void free_variablevals(variablevals_t *varvals);
+variablevals_t *to_variablevars(const unitseq_t *const u);

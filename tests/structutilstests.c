@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 #include <structutils.h>
 
 #include "structutilstests.h"
 
 int test_sort_valueseq(void) {
-    printf("test_sort_valueseq\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     valueseq_t *v = alloc_valueseq(10);
@@ -28,7 +29,7 @@ int test_sort_valueseq(void) {
 }
 
 int test_unitseq_alloc(void) {
-    printf("test_unitseq_alloc\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     int num_units = 10;
@@ -60,7 +61,7 @@ int test_unitseq_alloc(void) {
 }
 
 int test_to_valueseq(void) {
-    printf("test_to_valueseq\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     const int num_units = 5;
@@ -138,7 +139,7 @@ int test_to_valueseq(void) {
 }
 
 int test_to_valueseq_when_last_value_is_distinct(void) {
-    printf("test_to_valueseq_when_last_value_is_distinct\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     const int num_units = 2;
@@ -186,7 +187,7 @@ int test_to_valueseq_when_last_value_is_distinct(void) {
 }
 
 int test_to_valueseq_when_all_values_equal(void) {
-    printf("test_to_valueseq_when_all_values_equal\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     const int num_units = 4;
@@ -246,7 +247,7 @@ int test_to_valueseq_when_all_values_equal(void) {
 }
 
 int test_variablevals_alloc_and_free_when_vals_are_null(void) {
-    printf("test_variablevals_alloc_and_free_when_vals_are_null\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     int num_vars = 3;
@@ -258,7 +259,7 @@ int test_variablevals_alloc_and_free_when_vals_are_null(void) {
 }
 
 int test_variablevals_alloc_and_free_when_vals_are_allocated(void) {
-    printf("test_variablevals_alloc_and_free_when_vals_are_allocated\n");
+    printf("%s\n", __func__);
     int res = 0;
 
     int num_vars = 3;
@@ -268,6 +269,52 @@ int test_variablevals_alloc_and_free_when_vals_are_allocated(void) {
     for (int i = 0; i < num_vars; i++)
         varvals->vars[i] = alloc_valueseq(num_vals);
 
+    free_variablevals(varvals);
+
+    return res;
+}
+
+int test_to_variablevals(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    const int num_units = 5;
+    const int num_vars = 3;
+
+    unitseq_t *u = alloc_unitseq(num_units, num_vars);
+    for (int i = 0; i < num_units; i++) {
+        unit_t *unit = get_unit(u, i);
+        unit->id = i;
+        for (int j = 0; j < num_vars; j++)
+            unit->vals[j] = pow(i + 1, j + 1);
+    }
+
+    variablevals_t *varvals = to_variablevars(u);
+
+    if (varvals->num_vars != num_vars) {
+        printf("\twrong number of variables");
+        res--;
+    } else {
+        for (int i = 0; i < varvals->num_vars; i++) {
+            if (varvals->vars[i]->len != num_units) {
+                printf("\twrong number of values for vars-index %d", i);
+                printf(" (expected %d, got %d)\n", num_units, varvals->vars[i]->len);
+                res--;
+            } else {
+                for (int j = 0; j < varvals->vars[i]->len; j++) {
+                    double expected = pow(j + 1, i + 1);
+                    if (varvals->vars[i]->vals[j].val != expected) {
+                        printf("\twrong value for vars-index %d, value-index %d. ", i, j);
+                        printf(" (expected %.2f, got %.2f)\n", expected, varvals->vars[i]->vals[j].val);
+                        res--;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    free_unitseq(u);
     free_variablevals(varvals);
 
     return res;
