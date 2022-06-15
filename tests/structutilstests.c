@@ -137,8 +137,8 @@ int test_to_valueseq(void) {
     return res;
 }
 
-int test_to_valueseq_last_value_is_distinct(void) {
-    printf("test_to_valueseq_last_value_is_distinct\n");
+int test_to_valueseq_when_last_value_is_distinct(void) {
+    printf("test_to_valueseq_when_last_value_is_distinct\n");
     int res = 0;
 
     const int num_units = 2;
@@ -185,8 +185,8 @@ int test_to_valueseq_last_value_is_distinct(void) {
     return res;
 }
 
-int test_to_valueseq_all_values_equal(void) {
-    printf("test_to_valueseq_all_values_equal\n");
+int test_to_valueseq_when_all_values_equal(void) {
+    printf("test_to_valueseq_when_all_values_equal\n");
     int res = 0;
 
     const int num_units = 4;
@@ -241,6 +241,34 @@ int test_to_valueseq_all_values_equal(void) {
 
     free_unitseq(u);
     free_valueseq(v);
+
+    return res;
+}
+
+int test_variablevals_alloc_and_free_when_vals_are_null(void) {
+    printf("test_variablevals_alloc_and_free_when_vals_are_null\n");
+    int res = 0;
+
+    int num_vars = 3;
+    variablevals_t *varvals = alloc_variablevals(num_vars);
+
+    free_variablevals(varvals);
+
+    return res;
+}
+
+int test_variablevals_alloc_and_free_when_vals_are_allocated(void) {
+    printf("test_variablevals_alloc_and_free_when_vals_are_allocated\n");
+    int res = 0;
+
+    int num_vars = 3;
+    int num_vals = 10;
+    variablevals_t *varvals = alloc_variablevals(num_vars);
+
+    for (int i = 0; i < num_vars; i++)
+        varvals->vars[i] = alloc_valueseq(num_vals);
+
+    free_variablevals(varvals);
 
     return res;
 }

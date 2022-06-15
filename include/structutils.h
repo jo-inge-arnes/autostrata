@@ -13,4 +13,5 @@ int compare_values(const void *const a, const void *const b);
 void alloc_unit_ids(value_t *const v, const int num_units);
 valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index);
 
-
+variablevals_t *alloc_variablevals(const int num_vars);
+void free_variablevals(variablevals_t *varvals);

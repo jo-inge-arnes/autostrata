@@ -33,7 +33,7 @@ typedef struct valueseq {
     value_t vals[0];
 } valueseq_t;
 
-typedef struct varvals {
+typedef struct variablevals {
     int num_vars;
     valueseq_t *vars[0];
-} varvals_t;
+} variablevals_t;

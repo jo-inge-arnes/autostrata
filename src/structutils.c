@@ -62,13 +62,15 @@ void alloc_unit_ids(value_t *const v, const int num_units) {
 }
 
 void free_valueseq(valueseq_t *v) {
-    for (int i = 0; i < v->len; i++) {
-        if (v->vals[i].num_units > 0) {
-            free(v->vals[i].unit_ids);
-            v->vals[i].num_units = 0;
+    if (v != NULL) {
+        for (int i = 0; i < v->len; i++) {
+            if (v->vals[i].num_units > 0) {
+                free(v->vals[i].unit_ids);
+                v->vals[i].num_units = 0;
+            }
         }
+        free(v);
     }
-    free(v);
 }
 
 void sort_valueseq(valueseq_t *const v) {
@@ -163,3 +165,23 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
 
     return v;
 }
+
+variablevals_t *alloc_variablevals(const int num_vars) {
+    variablevals_t *varvals =
+        malloc(sizeof(variablevals_t) + num_vars * sizeof(valueseq_t*));
+
+    varvals->num_vars = num_vars;
+
+    for (int i = 0; i < num_vars; i++)
+        varvals->vars[i] = NULL;
+
+    return varvals;
+}
+
+void free_variablevals(variablevals_t *varvals) {
+    for (int i = 0; i < varvals->num_vars; i++)
+        free_valueseq(varvals->vars[i]);
+
+    free(varvals);
+}
+
