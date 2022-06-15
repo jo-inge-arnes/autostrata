@@ -166,6 +166,18 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
     return v;
 }
 
+int index_of_value(const valueseq_t *const v, const value_t *const value) {
+    int res = -1;
+
+    value_t *found =
+        bsearch(value, v->vals, v->len, sizeof(value_t), compare_values);
+
+    if (found != NULL)
+        res = (found - v->vals);
+
+    return res;
+}
+
 variablevals_t *alloc_variablevals(const int num_vars) {
     variablevals_t *varvals =
         malloc(sizeof(variablevals_t) + num_vars * sizeof(valueseq_t*));

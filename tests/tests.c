@@ -15,9 +15,12 @@ int main(int argc, char *argv[]) {
     #pragma GCC diagnostic ignored "-Wunused-value"
     test_sort_valueseq() && failures++;
     test_unitseq_alloc() && failures++;
+
     test_to_valueseq() && failures++;
     test_to_valueseq_when_last_value_is_distinct() && failures++;
     test_to_valueseq_when_all_values_equal() && failures++;
+    test_index_of_value_with_existing_value() && failures++;
+
     test_variablevals_alloc_and_free_when_vals_are_null() && failures++;
     test_variablevals_alloc_and_free_when_vals_are_allocated() && failures++;
     test_to_variablevals() && failures++;

@@ -246,6 +246,32 @@ int test_to_valueseq_when_all_values_equal(void) {
     return res;
 }
 
+int test_index_of_value_with_existing_value(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    valueseq_t *v = alloc_valueseq(10);
+    for (int i = 0; i < v->len; i++)
+        v->vals[i].val = v->len - i;
+
+    sort_valueseq(v);
+
+    value_t val_to_find;
+    val_to_find.val = 8.0;
+    int expected = (int)val_to_find.val - 1;
+
+    int index = index_of_value(v, &val_to_find);
+
+    if (index != expected) {
+        printf("\texpected index %d, got %d\n", expected, index);
+        res--;
+    }
+
+    free_valueseq(v);
+
+    return res;
+}
+
 int test_variablevals_alloc_and_free_when_vals_are_null(void) {
     printf("%s\n", __func__);
     int res = 0;

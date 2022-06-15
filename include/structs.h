@@ -18,14 +18,14 @@ typedef struct unitseq {
 
 typedef struct stratum {
     int id;
-    int num_units;
-    int *unit_ids;  // Size is not equal for all instances, but is immutable
+    int num_units; // not equal for all instances, but is immutable
+    int *unit_ids;
 } stratum_t;
 
 typedef struct value {
     double val;
-    int num_units;
-    int *unit_ids;  // Size is not equal for all instances, but is immutable
+    int num_units; // not equal for all instances, but is immutable
+    int *unit_ids;
 } value_t;
 
 typedef struct valueseq {
