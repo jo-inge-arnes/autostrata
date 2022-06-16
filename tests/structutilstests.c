@@ -315,7 +315,7 @@ int test_to_variablevals(void) {
             unit->vals[j] = pow(i + 1, j + 1);
     }
 
-    variablevals_t *varvals = to_variablevars(u);
+    variablevals_t *varvals = to_variablevals(u);
 
     if (varvals->num_vars != num_vars) {
         printf("\twrong number of variables");

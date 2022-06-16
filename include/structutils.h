@@ -16,7 +16,7 @@ int index_of_value(const valueseq_t *const v, const value_t *const value);
 
 variablevals_t *alloc_variablevals(const int num_vars);
 void free_variablevals(variablevals_t *varvals);
-variablevals_t *to_variablevars(const unitseq_t *const u);
+variablevals_t *to_variablevals(const unitseq_t *const u);
 
 strata_t *alloc_strata(int num_slots);
 strata_t *realloc_strata(strata_t *strata, int num_slots);
