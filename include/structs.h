@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef struct unit {
     int id;
@@ -16,15 +17,22 @@ typedef struct unitseq {
     char units[0];
 } unitseq_t;
 
+
 typedef struct stratum {
     int id;
-    int num_units; // not equal for all instances, but is immutable
+    int num_units; // not equal for all instances, but doesn't change
+    bool in_use;
     int *unit_ids;
 } stratum_t;
 
+typedef struct strata {
+    int num_slots;
+    stratum_t slots[0];
+} strata_t;
+
 typedef struct value {
     double val;
-    int num_units; // not equal for all instances, but is immutable
+    int num_units; // not equal for all instances, but doesn't change
     int *unit_ids;
 } value_t;
 
