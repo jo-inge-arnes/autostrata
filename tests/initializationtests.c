@@ -11,10 +11,7 @@ void set_unit(unitseq_t *u, int index, double var1, double var2, double var3) {
     unit->vals[2] = var3;
 }
 
-int test_init_strata(void) {
-    printf("%s\n", __func__);
-    int res = 0;
-
+unitseq_t *setup_unitseq(void) {
     const int num_units = 7;
     const int num_vars = 3;
 
@@ -30,8 +27,15 @@ int test_init_strata(void) {
     set_unit(u, 5, 1, 3, 1);
     set_unit(u, 6, 2, 1, 1);
 
-    variablevals_t *v = to_variablevals(u);
+    return u;
+}
 
+int test_init_strata(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    unitseq_t *u = setup_unitseq();
+    variablevals_t *v = to_variablevals(u);
     strata_t *s = init_strata(u, v);
 
     if (s->num_slots != 5) {
@@ -104,6 +108,30 @@ int test_init_strata(void) {
     } else if (s->slots[4].unit_ids[0] != 6) {
         printf("\texpected slot 4, index 0 to be 6, but got %d\n", s->slots[4].unit_ids[0]);
         res--;
+    }
+
+    free_strata(s);
+    free_variablevals(v);
+    free_unitseq(u);
+
+    return res;
+}
+
+int test_init_strata_unit_stratum_ids(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    unitseq_t *u = setup_unitseq();
+    variablevals_t *v = to_variablevals(u);
+    strata_t *s = init_strata(u, v);
+
+    int expected[] = { 0, 1, 0, 2, 1, 3, 4 };
+    for (int i = 0; i < u->num_units; i++) {
+        if (get_unit(u, i)->stratum_id != expected[i]) {
+            printf("\texpected unit %d to have stratum id %d, but got %d\n",
+                i, expected[i], get_unit(u, i)->stratum_id);
+            res--;
+        }
     }
 
     free_strata(s);

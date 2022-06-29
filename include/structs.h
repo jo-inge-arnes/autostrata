@@ -7,7 +7,7 @@ typedef struct unit {
     int id;
     int group_id;
     int stratum_id;
-    double vals[0]; // Same size for all instances
+    double vals[0]; // Same number of values for all instances
 } unit_t;
 
 typedef struct unitseq {

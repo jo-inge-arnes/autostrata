@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     test_to_variablevals() && failures++;
 
     test_init_strata() && failures++;
+    test_init_strata_unit_stratum_ids() && failures++;
     #pragma GCC diagnostic pop
 
     int exit_code = failures ? EXIT_FAILURE : EXIT_SUCCESS;
