@@ -36,6 +36,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v) {
             alloc_stratum_unit_ids(stratum, 1);
             stratum->unit_ids[0] = unit_id;
             stratum->in_use = true;
+            stratum->id = next_stratum_id;
 
             next_stratum_id++;
         } else {
@@ -54,6 +55,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v) {
                 stratum->unit_ids[unit_ids_added] = base_unit_id;
                 unit_ids_added++;
                 stratum->in_use = true;
+                stratum->id = next_stratum_id;
 
                 next_stratum_id++;
 

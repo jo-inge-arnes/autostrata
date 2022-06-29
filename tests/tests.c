@@ -4,6 +4,7 @@
 
 #include "tests.h"
 #include "structutilstests.h"
+#include "initializationtests.h"
 
 int main(int argc, char *argv[]) {
     printf("Autostrata Test Suite\n---------------------\n");
@@ -24,6 +25,8 @@ int main(int argc, char *argv[]) {
     test_variablevals_alloc_and_free_when_vals_are_null() && failures++;
     test_variablevals_alloc_and_free_when_vals_are_allocated() && failures++;
     test_to_variablevals() && failures++;
+
+    test_init_strata() && failures++;
     #pragma GCC diagnostic pop
 
     int exit_code = failures ? EXIT_FAILURE : EXIT_SUCCESS;

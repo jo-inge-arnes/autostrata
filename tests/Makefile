@@ -4,8 +4,8 @@ CFLAGS=-Wall -I$(IDIR)
 LDIR =../lib
 LIBS=-lautostrata -lm
 _DEPS=autostrata.h structs.h
-DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS)) tests.h structutilstests.h
-TESTSOBJ=tests.o structutilstests.o
+DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS)) tests.h structutilstests.h initializationtests.h
+TESTSOBJ=tests.o structutilstests.o initializationtests.o
 
 %.o: %.c $(DEPS)
 	$(CC) $(DEBUG) -c -o $@ $< $(CFLAGS)
