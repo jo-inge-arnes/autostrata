@@ -18,11 +18,17 @@ typedef struct unitseq {
 } unitseq_t;
 
 
+typedef struct groupcounts {
+    int num_groups;
+    int counts[0];
+} groupcounts_t;
+
 typedef struct stratum {
     int id;
     int num_units; // not equal for all instances, but doesn't change
     bool in_use;
     int *unit_ids;
+    groupcounts_t *group_counts;
 } stratum_t;
 
 typedef struct strata {

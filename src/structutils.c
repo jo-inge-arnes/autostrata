@@ -204,13 +204,14 @@ variablevals_t *to_variablevals(const unitseq_t *const u) {
     return varvals;
 }
 
-strata_t *alloc_strata(int num_slots) {
+strata_t *alloc_strata(int num_slots, int num_groups) {
     strata_t *strata =
         malloc(sizeof(strata_t) + num_slots * sizeof(stratum_t));
     strata->num_slots = num_slots;
     for (int i = 0; i < strata->num_slots; i++) {
         strata->slots[i].num_units = 0;
         strata->slots[i].unit_ids = NULL;
+        alloc_group_counts(&strata->slots[i], num_groups);
         strata->slots[i].in_use = false;
     }
     return strata;
@@ -223,11 +224,8 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
         if (slots_added < 0) {
             // Shrinking. Free unit_ids for instances that will be deleted.
             for (int i = num_slots; i <strata->num_slots; i++) {
-                if (strata->slots[i].num_units > 0) {
-                    free(strata->slots[i].unit_ids);
-                    strata->slots[i].unit_ids = NULL;
-                    strata->slots[i].num_units = 0;
-                }
+                free_group_counts(&strata->slots[i]);
+                free_stratum_unit_ids(&strata->slots[i]);
             }
         }
 
@@ -239,6 +237,7 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
             for (int i = num_slots - slots_added; i < num_slots; i++) {
                 strata->slots[i].num_units = 0;
                 strata->slots[i].unit_ids = NULL;
+                strata->slots[i].group_counts = NULL;
                 strata->slots[i].in_use = false;
             }
         }
@@ -248,8 +247,7 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
 }
 
 void alloc_stratum_unit_ids(stratum_t *s, int num_units) {
-    if (s->num_units > 0)
-        free(s->unit_ids);
+    free_stratum_unit_ids(s);
 
     if (num_units > 0) {
         s->unit_ids = malloc(num_units * sizeof(int));
@@ -262,19 +260,39 @@ void alloc_stratum_unit_ids(stratum_t *s, int num_units) {
 
 void shrink_stratum_unit_ids(stratum_t *s, int num_units) {
     if (num_units < 1) {
-        free(s->unit_ids);
-        s->unit_ids = NULL;
-        s->num_units = 0;
+        free_stratum_unit_ids(s);
     } else if (num_units < s->num_units) {
         s->unit_ids = realloc(s->unit_ids, num_units * sizeof(int));
         s->num_units = num_units;
     }
 }
 
+void free_stratum_unit_ids(stratum_t *s) {
+    if (s->num_units > 0) {
+        free(s->unit_ids);
+        s->unit_ids = NULL;
+        s->num_units = 0;
+    }
+}
+
+void alloc_group_counts(stratum_t *s, int num_groups) {
+    s->group_counts = malloc(sizeof(groupcounts_t) + num_groups * sizeof(int));
+    s->group_counts->num_groups = num_groups;
+    for (int i = 0; i < num_groups; i++)
+        s->group_counts->counts[i] = 0;
+}
+
+void free_group_counts(stratum_t *s) {
+    if (s->group_counts != NULL) {
+        free(s->group_counts);
+        s->group_counts = NULL;
+    }
+}
+
 void free_strata(strata_t *strata) {
     for (int i = 0; i < strata->num_slots; i++) {
-        if (strata->slots[i].num_units > 0)
-            free(strata->slots[i].unit_ids);
+        free_group_counts(&strata->slots[i]);
+        free_stratum_unit_ids(&strata->slots[i]);
     }
 
     free(strata);

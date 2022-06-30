@@ -6,10 +6,10 @@ ODIR=../obj
 LDIR=../lib
 OUTPUTFILE=libautostrata.a
 
-_DEPS=autostrata.h structs.h structutils.h initialization.h
+_DEPS=autostrata.h structs.h structutils.h initialization.h calculations.h
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ=autostrata.o structutils.o initialization.o
+_OBJ=autostrata.o structutils.o initialization.o calculations.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)

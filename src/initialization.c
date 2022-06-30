@@ -17,10 +17,11 @@ void clear_stratum_ids(unitseq_t *u) {
  *
  * @param u The units
  * @param v The sorted distinct values for the units' variables and their associated unit_ids
+ * @param num_groups The number of different groups in the sample
  */
-strata_t *init_strata(unitseq_t *u, variablevals_t *v) {
+strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
     clear_stratum_ids(u);
-    strata_t *strata = alloc_strata(u->num_units);
+    strata_t *strata = alloc_strata(u->num_units, num_groups);
 
     int next_stratum_id = 0;
     valueseq_t *first_var = v->vars[0];
