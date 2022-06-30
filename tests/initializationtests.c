@@ -34,9 +34,10 @@ int test_init_strata(void) {
     printf("%s\n", __func__);
     int res = 0;
 
+    const int num_groups = 2;
     unitseq_t *u = setup_unitseq();
     variablevals_t *v = to_variablevals(u);
-    strata_t *s = init_strata(u, v);
+    strata_t *s = init_strata(u, v, num_groups);
 
     if (s->num_slots != 5) {
         printf("\twrong number of slots allocated (expected: %d, got: %d)\n",
@@ -121,9 +122,10 @@ int test_init_strata_unit_stratum_ids(void) {
     printf("%s\n", __func__);
     int res = 0;
 
+    const int num_groups = 2;
     unitseq_t *u = setup_unitseq();
     variablevals_t *v = to_variablevals(u);
-    strata_t *s = init_strata(u, v);
+    strata_t *s = init_strata(u, v, num_groups);
 
     int expected[] = { 0, 1, 0, 2, 1, 3, 4 };
     for (int i = 0; i < u->num_units; i++) {
