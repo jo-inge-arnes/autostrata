@@ -1,5 +1,6 @@
 #include <initialization.h>
 #include <structutils.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 #define EMPTY_ID -1
@@ -8,6 +9,19 @@ void clear_stratum_ids(unitseq_t *u) {
     for (int i = 0; i < u->num_units; i++)
         get_unit(u, i)->stratum_id = EMPTY_ID;
 }
+
+void update_group_counts(stratumstats_t *stats, unit_t *unit) {
+    if (unit->group_id < 0 || unit->group_id >= stats->num_groups) {
+        fprintf(stderr,
+            "[ERROR]: The range of valid groups ids are [0 , %d], "
+            "but a unit was found that had a group id of %d.\n",
+            stats->num_groups,
+            unit->group_id);
+    } else {
+        stats->group_unit_counts[unit->group_id]++;
+    }
+}
+
 
 /**
  * @brief Assigns initial stratum IDs to all units and creates strata-structure
@@ -31,11 +45,13 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
         int cur_num_units = cur_val->num_units;
         if (cur_num_units == 1) {
             int unit_id = cur_val->unit_ids[0];
-            get_unit(u, unit_id)->stratum_id = next_stratum_id;
+            unit_t *unit = get_unit(u, unit_id);
+            unit->stratum_id = next_stratum_id;
 
             stratum_t *stratum = &strata->slots[next_stratum_id];
             alloc_stratum_unit_ids(stratum, 1);
             stratum->unit_ids[0] = unit_id;
+            update_group_counts(stratum->stats, unit);
             stratum->in_use = true;
             stratum->id = next_stratum_id;
 
@@ -54,6 +70,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
                 alloc_stratum_unit_ids(stratum, cur_num_units - base_unit_i);
                 int unit_ids_added = 0;
                 stratum->unit_ids[unit_ids_added] = base_unit_id;
+                update_group_counts(stratum->stats, base_unit);
                 unit_ids_added++;
                 stratum->in_use = true;
                 stratum->id = next_stratum_id;
@@ -78,6 +95,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
                     if (only_identical_vals) {
                         cur_unit->stratum_id = base_unit->stratum_id;
                         stratum->unit_ids[unit_ids_added] = cur_unit->id;
+                        update_group_counts(stratum->stats, cur_unit);
                         unit_ids_added++;
                     }
                 }

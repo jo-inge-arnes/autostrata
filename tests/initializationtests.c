@@ -4,8 +4,9 @@
 
 #include "initializationtests.h"
 
-void set_unit(unitseq_t *u, int index, double var1, double var2, double var3) {
+void set_unit(unitseq_t *u, int index, int group, double var1, double var2, double var3) {
     unit_t *unit = get_unit(u, index);
+    unit->group_id = group;
     unit->vals[0] = var1;
     unit->vals[1] = var2;
     unit->vals[2] = var3;
@@ -19,13 +20,13 @@ unitseq_t *setup_unitseq(void) {
     for (int i = 0; i < num_units; i++)
         get_unit(u, i)->id = i;
 
-    set_unit(u, 0, 1, 1, 1);
-    set_unit(u, 1, 1, 2, 2);
-    set_unit(u, 2, 1, 1, 1);
-    set_unit(u, 3, 1, 2, 31);
-    set_unit(u, 4, 1, 2, 2);
-    set_unit(u, 5, 1, 3, 1);
-    set_unit(u, 6, 2, 1, 1);
+    set_unit(u, 0, 0, 1.0, 1.0, 1.0);
+    set_unit(u, 1, 1, 1.0, 2.0, 2.0);
+    set_unit(u, 2, 1, 1.0, 1.0, 1.0);
+    set_unit(u, 3, 0, 1.0, 2.0, 31.0);
+    set_unit(u, 4, 1, 1.0, 2.0, 2.0);
+    set_unit(u, 5, 0, 1.0, 3.0, 1.0);
+    set_unit(u, 6, 1, 2.0, 1.0, 1.0);
 
     return u;
 }
@@ -185,6 +186,36 @@ int test_init_strata_unit_stratum_ids(void) {
                     i, stats, s->slots[i].stats);
                 res--;
                 break;
+            }
+        }
+    }
+
+    free_strata(s);
+    free_variablevals(v);
+    free_unitseq(u);
+
+    return res;
+ }
+
+ int test_init_strata_stats_group_counts(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    const int num_groups = 2;
+    unitseq_t *u = setup_unitseq();
+    variablevals_t *v = to_variablevals(u);
+    strata_t *s = init_strata(u, v, num_groups);
+
+    int expected[] = {1, 1, 0, 2, 1, 0, 1, 0, 0, 1};
+    for (int i = 0; i < s->num_slots; i++) {
+        stratumstats_t *stats = s->slots[i].stats;
+        for (int j = 0; j < stats->num_groups; j++)
+        {
+            int expected_i = i * stats->num_groups + j;
+            if (stats->group_unit_counts[j] != expected[expected_i]) {
+                printf("\tgroup count for stratum %d, group %d, was %d, expected %d\n",
+                    i, j, stats->group_unit_counts[j], expected[expected_i]);
+                res--;
             }
         }
     }
