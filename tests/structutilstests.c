@@ -346,13 +346,8 @@ int test_to_variablevals(void) {
     return res;
 }
 
-int test_stata_stats_alloc_zero_group_counts(void) {
-    printf("%s\n", __func__);
+int verify_strata_stats_values(stratastats_t *strata_stats, int num_slots, int num_groups) {
     int res = 0;
-    int num_slots = 2;
-    int num_groups = 3;
-
-    stratastats_t *strata_stats = alloc_strata_stats(num_slots, num_groups);
 
     if (strata_stats->num_groups != num_groups) {
         printf("\twrong num groups, expected %d but got %d\n",
@@ -392,14 +387,40 @@ int test_stata_stats_alloc_zero_group_counts(void) {
         }
     }
 
-    free_strata_stats(strata_stats);
-
     return res;
 }
 
-int test_stata_stats_realloc_zero_group_counts(void) {
+int test_stata_stats_alloc_and_realloc_modifies_values_correctly(void) {
     printf("%s\n", __func__);
     int res = 0;
+
+    int num_groups = 3;
+    int initial_num_slots = 4;
+    int more_num_slots = 10;
+    int fewer_num_slots = 2;
+
+    stratastats_t *strata_stats = alloc_strata_stats(initial_num_slots, num_groups);
+
+    res = verify_strata_stats_values(strata_stats, initial_num_slots, num_groups);
+    if (res < 0) {
+        printf("\tinitial alloc_strata_stats didn't work properly\n");
+    } else {
+        strata_stats = realloc_strata_stats(strata_stats, more_num_slots);
+        res = verify_strata_stats_values(strata_stats, more_num_slots, num_groups);
+
+        if (res < 0) {
+            printf("\trealloc_strata_stats to more slots didn't work properly\n");
+        } else {
+            strata_stats = realloc_strata_stats(strata_stats, fewer_num_slots);
+            res = verify_strata_stats_values(strata_stats, fewer_num_slots, num_groups);
+
+            if (res < 0) {
+                printf("\trealloc_strata_stats to fewer slots didn't work properly\n");
+            }
+        }
+    }
+
+    free_strata_stats(strata_stats);
 
     return res;
 }
