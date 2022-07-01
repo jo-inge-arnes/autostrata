@@ -225,8 +225,10 @@ stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
     strata_stats->num_slots = num_slots;
     strata_stats->num_groups = num_groups;
 
+    stratumstats_t *stats;
     for (int i = 0; i < num_slots; i++) {
-        get_stratum_stats(strata_stats, i)->num_groups = num_groups;
+        stats = get_stratum_stats(strata_stats, i);
+        stats->num_groups = num_groups;
     }
 
     return strata_stats;
@@ -244,9 +246,10 @@ stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots) 
         memset(get_stratum_stats(strata_stats, added_start),
             0, num_added * size_stratumstats);
 
+        stratumstats_t *stats;
         for (int i = added_start; i < num_slots; i++) {
-            get_stratum_stats(strata_stats, i)->num_groups =
-                strata_stats->num_groups;
+            stats = get_stratum_stats(strata_stats, i);
+            stats->num_groups = strata_stats->num_groups;
         }
     }
 
@@ -291,6 +294,7 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
             sizeof(strata_t) + num_slots * sizeof(stratum_t));
         strata->num_slots = num_slots;
 
+        stratastats_t *old_strata_stats = strata->strata_stats;
         strata->strata_stats =
             realloc_strata_stats(strata->strata_stats, num_slots);
 
@@ -298,9 +302,15 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
             for (int i = num_slots - slots_added; i < num_slots; i++) {
                 strata->slots[i].num_units = 0;
                 strata->slots[i].unit_ids = NULL;
+                strata->slots[i].in_use = false;
+            }
+        }
+
+        if (old_strata_stats != strata->strata_stats) {
+            // The strata_stats address has changed due to realloc
+            for (int i = 0; i < strata->num_slots; i++) {
                 strata->slots[i].stats =
                     get_stratum_stats(strata->strata_stats, i);
-                strata->slots[i].in_use = false;
             }
         }
     }

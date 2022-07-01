@@ -142,3 +142,55 @@ int test_init_strata_unit_stratum_ids(void) {
 
     return res;
 }
+
+ int test_init_strata_stats(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    const int num_groups = 2;
+    unitseq_t *u = setup_unitseq();
+    variablevals_t *v = to_variablevals(u);
+    strata_t *s = init_strata(u, v, num_groups);
+
+    if (s->strata_stats->num_groups != num_groups) {
+        printf("\texpected num groups for strata stats to %d, but got %d\n",
+            num_groups,
+            s->strata_stats->num_groups);
+        res--;
+    }
+
+    if (s->strata_stats->num_slots != s->num_slots) {
+        printf("\texpected num slots for strata stats to %d, but got %d\n",
+            s->num_slots,
+            s->strata_stats->num_slots);
+        res--;
+    } else {
+        for (int i = 0; i < s->strata_stats->num_slots; i++) {
+            if (get_stratum_stats(s->strata_stats, i)->num_groups != num_groups) {
+                printf("\texpected num groups for each stratum stats instance to be %d, but got %d for index %d\n",
+                    num_groups,
+                    get_stratum_stats(s->strata_stats, i)->num_groups,
+                    i);
+                res--;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < s->num_slots; i++) {
+        if (s->slots[i].stats != get_stratum_stats(s->strata_stats, i)) {
+            printf("\texpected stats pointer for stratum with index %d to be %p, but got %p\n",
+                i,
+                get_stratum_stats(s->strata_stats, i),
+                s->slots[i].stats);
+            res--;
+            break;
+        }
+    }
+
+    free_strata(s);
+    free_variablevals(v);
+    free_unitseq(u);
+
+    return res;
+ }
