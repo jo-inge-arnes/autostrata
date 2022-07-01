@@ -220,6 +220,16 @@ int test_init_strata_unit_stratum_ids(void) {
         }
     }
 
+    int expected_total[] = {3, 4};
+    for (int i = 0; i < num_groups; i++) {
+        int group_total = s->strata_stats->stats_total->group_unit_counts[i];
+        if(group_total != expected_total[i]) {
+            printf("\ttotal group count for group %d was %d, expected %d\n",
+                i, group_total, expected_total[i]);
+            res--;
+        }
+    }
+
     free_strata(s);
     free_variablevals(v);
     free_unitseq(u);
