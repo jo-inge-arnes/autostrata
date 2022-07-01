@@ -345,3 +345,61 @@ int test_to_variablevals(void) {
 
     return res;
 }
+
+int test_stata_stats_alloc_zero_group_counts(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+    int num_slots = 2;
+    int num_groups = 3;
+
+    stratastats_t *strata_stats = alloc_strata_stats(num_slots, num_groups);
+
+    if (strata_stats->num_groups != num_groups) {
+        printf("\twrong num groups, expected %d but got %d\n",
+            num_groups,
+            strata_stats->num_groups);
+        res--;
+    }
+
+    if (strata_stats->num_slots != num_slots) {
+        printf("\twrong num slots, expected %d but got %d\n",
+            num_slots,
+            strata_stats->num_slots);
+        res--;
+    }
+
+    if (res >= 0) {
+        stratumstats_t *stats;
+        for (int i = 0; i < num_slots; i++) {
+            stats = get_stratum_stats(strata_stats, i);
+            if (stats->num_groups != num_groups) {
+                printf("\texpected num groups to be %d but got %d\n",
+                    num_groups, stats->num_groups);
+                res--;
+            } else {
+                for (int j = 0; j < num_groups; j++) {
+                    if (stats->group_unit_counts[j] != 0) {
+                        printf("\tgroup count for stats index %d, group index %d, should be 0 but was %d\n",
+                            i, j, stats->group_unit_counts[j]);
+                        res--;
+                        break;
+                    }
+                }
+            }
+
+            if (res < 0)
+                break;
+        }
+    }
+
+    free_strata_stats(strata_stats);
+
+    return res;
+}
+
+int test_stata_stats_realloc_zero_group_counts(void) {
+    printf("%s\n", __func__);
+    int res = 0;
+
+    return res;
+}

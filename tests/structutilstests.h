@@ -13,4 +13,7 @@ int test_variablevals_alloc_and_free_when_vals_are_allocated(void);
 
 int test_to_variablevals(void);
 
+int test_stata_stats_alloc_zero_group_counts(void);
+int test_stata_stats_realloc_zero_group_counts(void);
+
 

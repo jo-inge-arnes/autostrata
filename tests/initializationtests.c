@@ -177,14 +177,15 @@ int test_init_strata_unit_stratum_ids(void) {
         }
     }
 
-    for (int i = 0; i < s->num_slots; i++) {
-        if (s->slots[i].stats != get_stratum_stats(s->strata_stats, i)) {
-            printf("\texpected stats pointer for stratum with index %d to be %p, but got %p\n",
-                i,
-                get_stratum_stats(s->strata_stats, i),
-                s->slots[i].stats);
-            res--;
-            break;
+    if (res >= 0) {
+        for (int i = 0; i < s->num_slots; i++) {
+            stratumstats_t *stats = get_stratum_stats(s->strata_stats, i);
+            if (s->slots[i].stats != stats) {
+                printf("\texpected stats pointer for stratum with index %d to be %p, but got %p\n",
+                    i, stats, s->slots[i].stats);
+                res--;
+                break;
+            }
         }
     }
 

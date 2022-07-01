@@ -29,6 +29,9 @@ int main(int argc, char *argv[]) {
     test_init_strata() && failures++;
     test_init_strata_unit_stratum_ids() && failures++;
     test_init_strata_stats() && failures++;
+
+    test_stata_stats_alloc_zero_group_counts() && failures++;
+    test_stata_stats_realloc_zero_group_counts() && failures++;
     #pragma GCC diagnostic pop
 
     int exit_code = failures ? EXIT_FAILURE : EXIT_SUCCESS;
