@@ -106,6 +106,7 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
     // First, allocate a value_t instance per unit_t instance, allowing
     // non-unique values.
     valueseq_t *v = alloc_valueseq(num_units);
+
     for (int i = 0; i < num_units; i++) {
         u_i = get_unit(u, i);
         v_i = &v->vals[i];
@@ -199,8 +200,10 @@ void free_variablevals(variablevals_t *varvals) {
 
 variablevals_t *to_variablevals(const unitseq_t *const u) {
     variablevals_t *varvals = alloc_variablevals(u->num_vals);
+
     for (int i = 0; i < varvals->num_vars; i++)
         varvals->vars[i] = to_valueseq(u, i);
+
     return varvals;
 }
 
@@ -208,12 +211,14 @@ strata_t *alloc_strata(int num_slots, int num_groups) {
     strata_t *strata =
         malloc(sizeof(strata_t) + num_slots * sizeof(stratum_t));
     strata->num_slots = num_slots;
+
     for (int i = 0; i < strata->num_slots; i++) {
         strata->slots[i].num_units = 0;
         strata->slots[i].unit_ids = NULL;
         alloc_group_counts(&strata->slots[i], num_groups);
         strata->slots[i].in_use = false;
     }
+
     return strata;
 }
 
@@ -278,6 +283,7 @@ void free_stratum_unit_ids(stratum_t *s) {
 void alloc_group_counts(stratum_t *s, int num_groups) {
     s->group_counts = malloc(sizeof(groupcounts_t) + num_groups * sizeof(int));
     s->group_counts->num_groups = num_groups;
+    
     for (int i = 0; i < num_groups; i++)
         s->group_counts->counts[i] = 0;
 }
