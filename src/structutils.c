@@ -244,7 +244,7 @@ stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots) 
         memset(get_stratum_stats(strata_stats, added_start),
             0, num_added * size_stratumstats);
 
-        for (int i = added_start; i < num_added; i++) {
+        for (int i = added_start; i < num_slots; i++) {
             get_stratum_stats(strata_stats, i)->num_groups =
                 strata_stats->num_groups;
         }
