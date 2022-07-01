@@ -22,7 +22,6 @@ void update_group_counts(stratumstats_t *stats, unit_t *unit) {
     }
 }
 
-
 /**
  * @brief Assigns initial stratum IDs to all units and creates strata-structure
  *
@@ -36,6 +35,7 @@ void update_group_counts(stratumstats_t *stats, unit_t *unit) {
 strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
     clear_stratum_ids(u);
     strata_t *strata = alloc_strata(u->num_units, num_groups);
+    stratumstats_t *stats_total = strata->strata_stats->stats_total;
 
     int next_stratum_id = 0;
     valueseq_t *first_var = v->vars[0];
@@ -52,6 +52,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
             alloc_stratum_unit_ids(stratum, 1);
             stratum->unit_ids[0] = unit_id;
             update_group_counts(stratum->stats, unit);
+            update_group_counts(stats_total, unit);
             stratum->in_use = true;
             stratum->id = next_stratum_id;
 
@@ -71,6 +72,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
                 int unit_ids_added = 0;
                 stratum->unit_ids[unit_ids_added] = base_unit_id;
                 update_group_counts(stratum->stats, base_unit);
+                update_group_counts(stats_total, base_unit);
                 unit_ids_added++;
                 stratum->in_use = true;
                 stratum->id = next_stratum_id;
@@ -96,6 +98,7 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
                         cur_unit->stratum_id = base_unit->stratum_id;
                         stratum->unit_ids[unit_ids_added] = cur_unit->id;
                         update_group_counts(stratum->stats, cur_unit);
+                        update_group_counts(stats_total, cur_unit);
                         unit_ids_added++;
                     }
                 }

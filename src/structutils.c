@@ -212,18 +212,28 @@ size_t stratumstats_size(int num_groups) {
     return sizeof(stratumstats_t) + num_groups * sizeof(int);
 }
 
+stratumstats_t *get_stratum_stats_total(const stratastats_t *const strata_stats) {
+    return (stratumstats_t *)strata_stats->slots;
+}
+
 stratumstats_t *get_stratum_stats(const stratastats_t *const strata_stats, int index) {
-    return (stratumstats_t *) &strata_stats->slots[index * stratumstats_size(strata_stats->num_groups)];
+    // Note that the actual index is 1 + index, because index 0 is used for
+    // total counts
+    return (stratumstats_t *) &strata_stats->slots[(1 + index) * stratumstats_size(strata_stats->num_groups)];
 }
 
 stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
+    // Note that 1 more slot than requested is allocated.
+    // This is because the first one is used for the total counts.
     size_t size = sizeof(stratastats_t) +
-            num_slots * stratumstats_size(num_groups);
+            (num_slots + 1) * stratumstats_size(num_groups);
     stratastats_t *strata_stats = malloc(size);
     memset(strata_stats, 0, size);
 
     strata_stats->num_slots = num_slots;
     strata_stats->num_groups = num_groups;
+    strata_stats->stats_total = get_stratum_stats_total(strata_stats);
+    strata_stats->stats_total->num_groups = num_groups;
 
     stratumstats_t *stats;
     for (int i = 0; i < num_slots; i++) {
@@ -236,9 +246,12 @@ stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
 
 stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots) {
     size_t size_stratumstats = stratumstats_size(strata_stats->num_groups);
-    size_t new_size = sizeof(stratastats_t) + num_slots * size_stratumstats;
+    // One more slot that requested is allocated, because the first is used for
+    // the total count.
+    size_t new_size = sizeof(stratastats_t) + (num_slots + 1) * size_stratumstats;
 
     strata_stats = realloc(strata_stats, new_size);
+    strata_stats->stats_total = get_stratum_stats_total(strata_stats);
 
     if (num_slots > strata_stats->num_slots) {
         int added_start = strata_stats->num_slots;

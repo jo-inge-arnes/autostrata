@@ -19,6 +19,7 @@ void free_variablevals(variablevals_t *varvals);
 variablevals_t *to_variablevals(const unitseq_t *const u);
 
 size_t stratumstats_size(int num_groups);
+stratumstats_t *get_stratum_stats_total(const stratastats_t *const strata_stats);
 stratumstats_t *get_stratum_stats(const stratastats_t *const strata_stats, int index);
 
 stratastats_t *alloc_strata_stats(int num_slots, int num_groups);

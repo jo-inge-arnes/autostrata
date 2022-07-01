@@ -25,6 +25,7 @@ typedef struct stratumstats {
 typedef struct stratastats {
     int num_slots;
     int num_groups;
+    stratumstats_t *stats_total;
     char slots[0];
 } stratastats_t;
 

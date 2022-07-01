@@ -387,6 +387,24 @@ int verify_strata_stats_values(stratastats_t *strata_stats, int num_slots, int n
         }
     }
 
+    if (res >= 0) {
+        stratumstats_t *stats = strata_stats->stats_total;
+        if (stats->num_groups != num_groups) {
+            printf("\texpected num groups for stats total to be %d but got %d\n",
+                num_groups, stats->num_groups);
+            res--;
+        } else {
+            for (int j = 0; j < num_groups; j++) {
+                if (stats->group_unit_counts[j] != 0) {
+                    printf("\tgroup count for total stats should be 0 but was %d\n",
+                        stats->group_unit_counts[j]);
+                    res--;
+                    break;
+                }
+            }
+        }
+    }
+
     return res;
 }
 
