@@ -1,6 +1,7 @@
 #include <structutils.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 unitseq_t *alloc_unitseq(const int num_units, const int num_vals) {
     const size_t unit_size = sizeof(unit_t) + num_vals * sizeof(double);
@@ -207,15 +208,68 @@ variablevals_t *to_variablevals(const unitseq_t *const u) {
     return varvals;
 }
 
+size_t stratumstats_size(int num_groups) {
+    return sizeof(stratumstats_t) + num_groups * sizeof(int);
+}
+
+stratumstats_t *get_stratum_stats(const stratastats_t *const strata_stats, int index) {
+    return (stratumstats_t *) &strata_stats->slots[index * stratumstats_size(strata_stats->num_groups)];
+}
+
+stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
+    size_t size = sizeof(stratastats_t) +
+            num_slots * stratumstats_size(num_groups);
+    stratastats_t *strata_stats = malloc(size);
+    memset(strata_stats, 0, size);
+
+    strata_stats->num_slots = num_slots;
+    strata_stats->num_groups = num_groups;
+
+    for (int i = 0; i < num_slots; i++) {
+        get_stratum_stats(strata_stats, i)->num_groups = num_groups;
+    }
+
+    return strata_stats;
+}
+
+stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots) {
+    size_t size_stratumstats = stratumstats_size(strata_stats->num_groups);
+    size_t new_size = sizeof(stratastats_t) + num_slots * size_stratumstats;
+
+    strata_stats = realloc(strata_stats, new_size);
+
+    if (num_slots > strata_stats->num_slots) {
+        int added_start = strata_stats->num_slots;
+        int num_added = num_slots - strata_stats->num_slots;
+        memset(get_stratum_stats(strata_stats, added_start),
+            0, num_added * size_stratumstats);
+
+        for (int i = added_start; i < num_added; i++) {
+            get_stratum_stats(strata_stats, i)->num_groups =
+                strata_stats->num_groups;
+        }
+    }
+
+    strata_stats->num_slots = num_slots;
+
+    return strata_stats;
+}
+
+void free_strata_stats(stratastats_t *strata_stats) {
+    free(strata_stats);
+}
+
 strata_t *alloc_strata(int num_slots, int num_groups) {
     strata_t *strata =
         malloc(sizeof(strata_t) + num_slots * sizeof(stratum_t));
     strata->num_slots = num_slots;
 
+    strata->strata_stats = alloc_strata_stats(num_slots, num_groups);
+
     for (int i = 0; i < strata->num_slots; i++) {
         strata->slots[i].num_units = 0;
         strata->slots[i].unit_ids = NULL;
-        alloc_group_counts(&strata->slots[i], num_groups);
+        strata->slots[i].stats = get_stratum_stats(strata->strata_stats, i);
         strata->slots[i].in_use = false;
     }
 
@@ -228,8 +282,7 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
 
         if (slots_added < 0) {
             // Shrinking. Free unit_ids for instances that will be deleted.
-            for (int i = num_slots; i <strata->num_slots; i++) {
-                free_group_counts(&strata->slots[i]);
+            for (int i = num_slots; i < strata->num_slots; i++) {
                 free_stratum_unit_ids(&strata->slots[i]);
             }
         }
@@ -238,11 +291,15 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
             sizeof(strata_t) + num_slots * sizeof(stratum_t));
         strata->num_slots = num_slots;
 
+        strata->strata_stats =
+            realloc_strata_stats(strata->strata_stats, num_slots);
+
         if (slots_added > 0) {
             for (int i = num_slots - slots_added; i < num_slots; i++) {
                 strata->slots[i].num_units = 0;
                 strata->slots[i].unit_ids = NULL;
-                strata->slots[i].group_counts = NULL;
+                strata->slots[i].stats =
+                    get_stratum_stats(strata->strata_stats, i);
                 strata->slots[i].in_use = false;
             }
         }
@@ -280,26 +337,12 @@ void free_stratum_unit_ids(stratum_t *s) {
     }
 }
 
-void alloc_group_counts(stratum_t *s, int num_groups) {
-    s->group_counts = malloc(sizeof(groupcounts_t) + num_groups * sizeof(int));
-    s->group_counts->num_groups = num_groups;
-    
-    for (int i = 0; i < num_groups; i++)
-        s->group_counts->counts[i] = 0;
-}
-
-void free_group_counts(stratum_t *s) {
-    if (s->group_counts != NULL) {
-        free(s->group_counts);
-        s->group_counts = NULL;
-    }
-}
-
 void free_strata(strata_t *strata) {
     for (int i = 0; i < strata->num_slots; i++) {
-        free_group_counts(&strata->slots[i]);
         free_stratum_unit_ids(&strata->slots[i]);
     }
 
+    free_strata_stats(strata->strata_stats);
+    strata->strata_stats = NULL;
     free(strata);
 }

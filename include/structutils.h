@@ -18,11 +18,16 @@ variablevals_t *alloc_variablevals(const int num_vars);
 void free_variablevals(variablevals_t *varvals);
 variablevals_t *to_variablevals(const unitseq_t *const u);
 
+size_t stratumstats_size(int num_groups);
+stratumstats_t *get_stratum_stats(const stratastats_t *const strata_stats, int index);
+
+stratastats_t *alloc_strata_stats(int num_slots, int num_groups);
+stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots);
+void free_strata_stats(stratastats_t *strata_stats);
+
 strata_t *alloc_strata(int num_slots, int num_groups);
 strata_t *realloc_strata(strata_t *strata, int num_slots);
 void alloc_stratum_unit_ids(stratum_t *s, int num_units);
 void shrink_stratum_unit_ids(stratum_t *s, int num_units);
 void free_stratum_unit_ids(stratum_t *s);
-void alloc_group_counts(stratum_t *s, int num_groups);
-void free_group_counts(stratum_t *s);
 void free_strata(strata_t *strata);
