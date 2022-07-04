@@ -284,22 +284,24 @@ void free_strata_stats(stratastats_t *strata_stats) {
     free(strata_stats);
 }
 
-void update_strata_stats_has_all_groups(stratastats_t *strata_stats) {
-    update_stratum_stats_has_all_groups(strata_stats->stats_total);
+void refresh_strata_stats_attributes(stratastats_t *strata_stats) {
+    refresh_stratum_stats_attributes(strata_stats->stats_total);
     for (int i = 0; i < strata_stats->num_slots; i++) {
-        update_stratum_stats_has_all_groups(get_stratum_stats(strata_stats, i));
+        refresh_stratum_stats_attributes(get_stratum_stats(strata_stats, i));
     }
 }
 
-void update_stratum_stats_has_all_groups(stratumstats_t *stats) {
+void refresh_stratum_stats_attributes(stratumstats_t *stats) {
     bool all_groups_present = true;
+    int unit_count = 0;
     for (int i = 0; i < stats->num_groups; i++) {
         if (stats->group_unit_counts[i] == 0) {
             all_groups_present = false;
-            break;
         }
+        unit_count += stats->group_unit_counts[i];
     }
     stats->has_all_groups = all_groups_present;
+    stats->unit_count = unit_count;
 }
 
 void update_group_counts(stratumstats_t *stats, unit_t *unit) {

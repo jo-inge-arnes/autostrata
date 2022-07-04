@@ -90,6 +90,6 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
     }
 
     strata = realloc_strata(strata, next_stratum_id);
-    update_strata_stats_has_all_groups(strata->strata_stats);
+    refresh_strata_stats_attributes(strata->strata_stats);
     return strata;
 }
