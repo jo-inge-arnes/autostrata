@@ -230,6 +230,7 @@ stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
     stratastats_t *strata_stats = malloc(size);
     memset(strata_stats, 0, size);
 
+    strata_stats->memsize = size;
     strata_stats->num_slots = num_slots;
     strata_stats->num_groups = num_groups;
     strata_stats->stats_total = get_stratum_stats_total(strata_stats);
@@ -251,6 +252,7 @@ stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots) 
     size_t new_size = sizeof(stratastats_t) + (num_slots + 1) * size_stratumstats;
 
     strata_stats = realloc(strata_stats, new_size);
+    strata_stats->memsize = new_size;
     strata_stats->stats_total = get_stratum_stats_total(strata_stats);
 
     if (num_slots > strata_stats->num_slots) {
@@ -276,8 +278,9 @@ void free_strata_stats(stratastats_t *strata_stats) {
 }
 
 strata_t *alloc_strata(int num_slots, int num_groups) {
-    strata_t *strata =
-        malloc(sizeof(strata_t) + num_slots * sizeof(stratum_t));
+    size_t size = sizeof(strata_t) + num_slots * sizeof(stratum_t);
+    strata_t *strata = malloc(size);
+    strata->memsize = size;
     strata->num_slots = num_slots;
 
     strata->strata_stats = alloc_strata_stats(num_slots, num_groups);
@@ -303,8 +306,9 @@ strata_t *realloc_strata(strata_t *strata, int num_slots) {
             }
         }
 
-        strata = (strata_t *)realloc(strata,
-            sizeof(strata_t) + num_slots * sizeof(stratum_t));
+        size_t new_size = sizeof(strata_t) + num_slots * sizeof(stratum_t);
+        strata = (strata_t *)realloc(strata, new_size);
+        strata->memsize = new_size;
         strata->num_slots = num_slots;
 
         stratastats_t *old_strata_stats = strata->strata_stats;

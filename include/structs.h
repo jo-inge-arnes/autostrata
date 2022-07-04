@@ -23,6 +23,7 @@ typedef struct stratumstats {
 } stratumstats_t;
 
 typedef struct stratastats {
+    size_t memsize;
     int num_slots;
     int num_groups;
     stratumstats_t *stats_total;
@@ -38,6 +39,7 @@ typedef struct stratum {
 } stratum_t;
 
 typedef struct strata {
+    size_t memsize;
     int num_slots;
     stratastats_t *strata_stats;
     stratum_t slots[0];
