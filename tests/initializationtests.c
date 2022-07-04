@@ -144,7 +144,7 @@ int test_init_strata_unit_stratum_ids(void) {
     return res;
 }
 
- int test_init_strata_stats(void) {
+int test_init_strata_stats(void) {
     printf("%s\n", __func__);
     int res = 0;
 
@@ -195,9 +195,9 @@ int test_init_strata_unit_stratum_ids(void) {
     free_unitseq(u);
 
     return res;
- }
+    }
 
- int test_init_strata_stats_group_counts(void) {
+int test_init_strata_stats_group_counts(void) {
     printf("%s\n", __func__);
     int res = 0;
 
@@ -235,4 +235,4 @@ int test_init_strata_unit_stratum_ids(void) {
     free_unitseq(u);
 
     return res;
- }
+}
