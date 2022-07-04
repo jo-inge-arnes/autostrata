@@ -20,6 +20,11 @@ unit_t *get_unit(const unitseq_t *const unitseq, const int index) {
     return (unit_t *) &unitseq->units[index * unitseq->unit_size];
 }
 
+void clear_stratum_ids(unitseq_t *u) {
+    for (int i = 0; i < u->num_units; i++)
+        get_unit(u, i)->stratum_id = EMPTY_ID;
+}
+
 valueseq_t *alloc_valueseq(const int num_values) {
     size_t size = sizeof(valueseq_t) + num_values * sizeof(value_t);
     valueseq_t *v = malloc(size);
@@ -214,6 +219,18 @@ size_t stratumstats_size(int num_groups) {
     return sizeof(stratumstats_t) + num_groups * sizeof(int);
 }
 
+void update_group_counts(stratumstats_t *stats, unit_t *unit) {
+    if (unit->group_id < 0 || unit->group_id >= stats->num_groups) {
+        fprintf(stderr,
+            "[ERROR]: The range of valid groups ids are [0 , %d], "
+            "but a unit was found that had a group id of %d.\n",
+            stats->num_groups,
+            unit->group_id);
+    } else {
+        stats->group_unit_counts[unit->group_id]++;
+    }
+}
+
 stratumstats_t *get_stratum_stats_total(const stratastats_t *const strata_stats) {
     return (stratumstats_t *)strata_stats->slots;
 }
@@ -237,6 +254,7 @@ stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
     strata_stats->num_groups = num_groups;
     strata_stats->stats_total = get_stratum_stats_total(strata_stats);
     strata_stats->stats_total->num_groups = num_groups;
+    strata_stats->has_all_groups = false;
 
     stratumstats_t *stats;
     for (int i = 0; i < num_slots; i++) {

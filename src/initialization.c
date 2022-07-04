@@ -3,25 +3,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define EMPTY_ID -1
-
-void clear_stratum_ids(unitseq_t *u) {
-    for (int i = 0; i < u->num_units; i++)
-        get_unit(u, i)->stratum_id = EMPTY_ID;
-}
-
-void update_group_counts(stratumstats_t *stats, unit_t *unit) {
-    if (unit->group_id < 0 || unit->group_id >= stats->num_groups) {
-        fprintf(stderr,
-            "[ERROR]: The range of valid groups ids are [0 , %d], "
-            "but a unit was found that had a group id of %d.\n",
-            stats->num_groups,
-            unit->group_id);
-    } else {
-        stats->group_unit_counts[unit->group_id]++;
-    }
-}
-
 /**
  * @brief Assigns initial stratum IDs to all units and creates strata-structure
  *

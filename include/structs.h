@@ -1,7 +1,8 @@
 #pragma once
-
 #include <stddef.h>
 #include <stdbool.h>
+
+#define EMPTY_ID -1
 
 typedef struct unit {
     int id;
@@ -26,6 +27,7 @@ typedef struct stratastats {
     size_t memsize;
     int num_slots;
     int num_groups;
+    bool has_all_groups;
     stratumstats_t *stats_total;
     char slots[0];
 } stratastats_t;

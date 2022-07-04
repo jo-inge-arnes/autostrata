@@ -4,6 +4,7 @@
 unitseq_t *alloc_unitseq(const int num_units, const int num_vals);
 void free_unitseq(unitseq_t *u);
 unit_t *get_unit(const unitseq_t *const unitseq, const int index);
+void clear_stratum_ids(unitseq_t *u);
 
 valueseq_t *alloc_valueseq(const int num_values);
 valueseq_t *realloc_valueseq(valueseq_t *v, int num_values);
@@ -21,6 +22,8 @@ variablevals_t *to_variablevals(const unitseq_t *const u);
 size_t stratumstats_size(int num_groups);
 stratumstats_t *get_stratum_stats_total(const stratastats_t *const strata_stats);
 stratumstats_t *get_stratum_stats(const stratastats_t *const strata_stats, int index);
+
+void update_group_counts(stratumstats_t *stats, unit_t *unit);
 
 stratastats_t *alloc_strata_stats(int num_slots, int num_groups);
 stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots);
