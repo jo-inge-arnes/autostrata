@@ -20,6 +20,7 @@ typedef struct unitseq {
 
 typedef struct stratumstats {
     int num_groups;
+    bool has_all_groups;
     int group_unit_counts[0];
 } stratumstats_t;
 
@@ -27,7 +28,6 @@ typedef struct stratastats {
     size_t memsize;
     int num_slots;
     int num_groups;
-    bool has_all_groups;
     stratumstats_t *stats_total;
     char slots[0];
 } stratastats_t;

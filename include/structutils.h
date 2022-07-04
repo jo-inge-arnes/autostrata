@@ -23,11 +23,13 @@ size_t stratumstats_size(int num_groups);
 stratumstats_t *get_stratum_stats_total(const stratastats_t *const strata_stats);
 stratumstats_t *get_stratum_stats(const stratastats_t *const strata_stats, int index);
 
-void update_group_counts(stratumstats_t *stats, unit_t *unit);
-
 stratastats_t *alloc_strata_stats(int num_slots, int num_groups);
 stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots);
 void free_strata_stats(stratastats_t *strata_stats);
+
+void update_strata_stats_has_all_groups(stratastats_t *strata_stats);
+void update_stratum_stats_has_all_groups(stratumstats_t *stats);
+void update_group_counts(stratumstats_t *stats, unit_t *unit);
 
 strata_t *alloc_strata(int num_slots, int num_groups);
 strata_t *realloc_strata(strata_t *strata, int num_slots);

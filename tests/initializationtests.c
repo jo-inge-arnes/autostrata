@@ -190,6 +190,24 @@ int test_init_strata_stats(void) {
         }
     }
 
+    if (res >= 0) {
+        bool expected[] = {true, false, false, false, false};
+        for (int i = 0; i < s->num_slots; i++) {
+            stratumstats_t *stats = get_stratum_stats(s->strata_stats, i);
+            if (stats->has_all_groups != expected[i]) {
+                printf("\texpected has_all_groups for stratum with index %d to be %s, but got %s\n",
+                    i, expected[i]?"true":"false", stats->has_all_groups ? "true":"false");
+                res--;
+                break;
+            }
+        }
+
+        if (!s->strata_stats->stats_total->has_all_groups) {
+            printf("\texpected has_all_groups for stats_total to be true but it was false\n");
+            res--;
+        }
+    }
+
     free_strata(s);
     free_variablevals(v);
     free_unitseq(u);

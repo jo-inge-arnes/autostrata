@@ -219,18 +219,6 @@ size_t stratumstats_size(int num_groups) {
     return sizeof(stratumstats_t) + num_groups * sizeof(int);
 }
 
-void update_group_counts(stratumstats_t *stats, unit_t *unit) {
-    if (unit->group_id < 0 || unit->group_id >= stats->num_groups) {
-        fprintf(stderr,
-            "[ERROR]: The range of valid groups ids are [0 , %d], "
-            "but a unit was found that had a group id of %d.\n",
-            stats->num_groups,
-            unit->group_id);
-    } else {
-        stats->group_unit_counts[unit->group_id]++;
-    }
-}
-
 stratumstats_t *get_stratum_stats_total(const stratastats_t *const strata_stats) {
     return (stratumstats_t *)strata_stats->slots;
 }
@@ -254,7 +242,6 @@ stratastats_t *alloc_strata_stats(int num_slots, int num_groups) {
     strata_stats->num_groups = num_groups;
     strata_stats->stats_total = get_stratum_stats_total(strata_stats);
     strata_stats->stats_total->num_groups = num_groups;
-    strata_stats->has_all_groups = false;
 
     stratumstats_t *stats;
     for (int i = 0; i < num_slots; i++) {
@@ -295,6 +282,36 @@ stratastats_t *realloc_strata_stats(stratastats_t *strata_stats, int num_slots) 
 
 void free_strata_stats(stratastats_t *strata_stats) {
     free(strata_stats);
+}
+
+void update_strata_stats_has_all_groups(stratastats_t *strata_stats) {
+    update_stratum_stats_has_all_groups(strata_stats->stats_total);
+    for (int i = 0; i < strata_stats->num_slots; i++) {
+        update_stratum_stats_has_all_groups(get_stratum_stats(strata_stats, i));
+    }
+}
+
+void update_stratum_stats_has_all_groups(stratumstats_t *stats) {
+    bool all_groups_present = true;
+    for (int i = 0; i < stats->num_groups; i++) {
+        if (stats->group_unit_counts[i] == 0) {
+            all_groups_present = false;
+            break;
+        }
+    }
+    stats->has_all_groups = all_groups_present;
+}
+
+void update_group_counts(stratumstats_t *stats, unit_t *unit) {
+    if (unit->group_id < 0 || unit->group_id >= stats->num_groups) {
+        fprintf(stderr,
+            "[ERROR]: The range of valid groups ids are [0 , %d], "
+            "but a unit was found that had a group id of %d.\n",
+            stats->num_groups,
+            unit->group_id);
+    } else {
+        stats->group_unit_counts[unit->group_id]++;
+    }
 }
 
 strata_t *alloc_strata(int num_slots, int num_groups) {
