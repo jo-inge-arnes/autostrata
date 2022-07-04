@@ -57,15 +57,17 @@ typedef struct valueseq {
     value_t vals[0];
 } valueseq_t;
 
-typedef struct variablevals {
-    size_t memsize;
-    int num_vars;
-    valueseq_t *vars[0];
-} variablevals_t;
-
 typedef struct intpool {
     size_t memsize;
     int num_slots;
     int next_slot;
     int slots[0];
 } intpool_t;
+
+typedef struct variablevals {
+    size_t memsize;
+    int num_vars;
+    intpool_t *id_pool;
+    valueseq_t *vars[0];
+} variablevals_t;
+

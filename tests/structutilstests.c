@@ -78,7 +78,8 @@ int test_to_valueseq(void) {
     get_unit(u, 3)->vals[selected_var] = 1.0;
     get_unit(u, 4)->vals[selected_var] = 1.0;
 
-    valueseq_t *v = to_valueseq(u, selected_var);
+    intpool_t *id_pool = allocate_intpool(u->num_units);
+    valueseq_t *v = to_valueseq(u, selected_var, id_pool);
 
     if (v->len != 3) {
         res--;
@@ -134,6 +135,7 @@ int test_to_valueseq(void) {
 
     free_unitseq(u);
     free_valueseq(v);
+    free_intpool(id_pool);
 
     return res;
 }
@@ -153,7 +155,8 @@ int test_to_valueseq_when_last_value_is_distinct(void) {
     get_unit(u, 0)->vals[selected_var] = 1.0;
     get_unit(u, 1)->vals[selected_var] = 2.0;
 
-    valueseq_t *v = to_valueseq(u, selected_var);
+    intpool_t *id_pool = allocate_intpool(u->num_units);
+    valueseq_t *v = to_valueseq(u, selected_var, id_pool);
 
     if (v->len != 2) {
         res--;
@@ -182,6 +185,7 @@ int test_to_valueseq_when_last_value_is_distinct(void) {
 
     free_unitseq(u);
     free_valueseq(v);
+    free_intpool(id_pool);
 
     return res;
 }
@@ -201,7 +205,8 @@ int test_to_valueseq_when_all_values_equal(void) {
         unit->vals[selected_var] = 10.0;
     }
 
-    valueseq_t *v = to_valueseq(u, selected_var);
+    intpool_t *id_pool = allocate_intpool(u->num_units);
+    valueseq_t *v = to_valueseq(u, selected_var, id_pool);
 
     if (v->len != 1) {
         res--;
@@ -242,6 +247,7 @@ int test_to_valueseq_when_all_values_equal(void) {
 
     free_unitseq(u);
     free_valueseq(v);
+    free_intpool(id_pool);
 
     return res;
 }
@@ -277,7 +283,8 @@ int test_variablevals_alloc_and_free_when_vals_are_null(void) {
     int res = 0;
 
     int num_vars = 3;
-    variablevals_t *varvals = alloc_variablevals(num_vars);
+    int num_units = 3;
+    variablevals_t *varvals = alloc_variablevals(num_vars, num_units);
 
     free_variablevals(varvals);
 
@@ -290,7 +297,7 @@ int test_variablevals_alloc_and_free_when_vals_are_allocated(void) {
 
     int num_vars = 3;
     int num_vals = 10;
-    variablevals_t *varvals = alloc_variablevals(num_vars);
+    variablevals_t *varvals = alloc_variablevals(num_vars, num_vals);
 
     for (int i = 0; i < num_vars; i++)
         varvals->vars[i] = alloc_valueseq(num_vals);

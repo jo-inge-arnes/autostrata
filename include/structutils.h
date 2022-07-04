@@ -10,11 +10,11 @@ valueseq_t *realloc_valueseq(valueseq_t *v, int num_values);
 void free_valueseq(valueseq_t *v);
 void sort_valueseq(valueseq_t *const v);
 int compare_values(const void *const a, const void *const b);
-void alloc_unit_ids(value_t *const v, const int num_units);
-valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index);
+void alloc_unit_ids(value_t *const v, const int num_units, intpool_t *id_pool);
+valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index, intpool_t *id_pool);
 int index_of_value(const valueseq_t *const v, const value_t *const value);
 
-variablevals_t *alloc_variablevals(const int num_vars);
+variablevals_t *alloc_variablevals(const int num_vars, const int num_units);
 void free_variablevals(variablevals_t *varvals);
 variablevals_t *to_variablevals(const unitseq_t *const u);
 

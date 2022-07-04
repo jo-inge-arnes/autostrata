@@ -59,21 +59,19 @@ valueseq_t *realloc_valueseq(valueseq_t *v, int num_values) {
     return v;
 }
 
-void alloc_unit_ids(value_t *const v, const int num_units) {
-    if (v->num_units > 0)
-        free(v->unit_ids);
-    v->unit_ids = malloc(num_units * sizeof(int));
+void alloc_unit_ids(value_t *const v, const int num_units, intpool_t *id_pool) {
+    if (id_pool->next_slot + num_units > id_pool->num_slots) {
+        fprintf(stderr,
+            "[ERROR]: %s cannot allocate %d more unit_ids because only %d slots are left",
+            __func__, num_units, id_pool->num_slots - id_pool->next_slot);
+    }
+    v->unit_ids = intpool_get_pointer(id_pool, id_pool->next_slot);
+    id_pool->next_slot += num_units;
     v->num_units = num_units;
 }
 
 void free_valueseq(valueseq_t *v) {
     if (v != NULL) {
-        for (int i = 0; i < v->len; i++) {
-            if (v->vals[i].num_units > 0) {
-                free(v->vals[i].unit_ids);
-                v->vals[i].num_units = 0;
-            }
-        }
         free(v);
     }
 }
@@ -95,7 +93,7 @@ int compare_values(const void *const a, const void *const b) {
         return 0;
 }
 
-valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
+valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index, intpool_t *id_pool) {
     const int num_units = u->num_units;
 
     if (num_units < 1) {
@@ -110,13 +108,14 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
 
     // First, allocate a value_t instance per unit_t instance, allowing
     // non-unique values.
+    intpool_t *temp_id_pool = allocate_intpool(num_units);
     valueseq_t *v = alloc_valueseq(num_units);
 
     for (int i = 0; i < num_units; i++) {
         u_i = get_unit(u, i);
         v_i = &v->vals[i];
         v_i->val = u_i->vals[val_index];
-        alloc_unit_ids(v_i, 1);
+        alloc_unit_ids(v_i, 1, temp_id_pool);
         v_i->unit_ids[0] = i;
     }
 
@@ -144,7 +143,7 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
                 value_t *distinct = &v2->vals[num_distinct_vals];
                 distinct->val = prev;
                 int num_repeats = end - start;
-                alloc_unit_ids(distinct, num_repeats);
+                alloc_unit_ids(distinct, num_repeats, id_pool);
                 for (int j = 0; j < num_repeats; j++) {
                     distinct->unit_ids[j] = v->vals[start + j].unit_ids[0];
                 }
@@ -155,10 +154,11 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
             }
         }
 
+        // Same as in loop, but for including the last distinct value
         value_t *distinct = &v2->vals[num_distinct_vals];
         distinct->val = prev;
         int num_repeats = end - start;
-        alloc_unit_ids(distinct, num_repeats);
+        alloc_unit_ids(distinct, num_repeats, id_pool);
         for (int j = 0; j < num_repeats; j++) {
             distinct->unit_ids[j] = v->vals[start + j].unit_ids[0];
         }
@@ -166,6 +166,8 @@ valueseq_t *to_valueseq(const unitseq_t *const u, const int val_index) {
 
         // Lastly, shrink space allocated to valueseq.
         free_valueseq(v);
+        free_intpool(temp_id_pool);
+        temp_id_pool = NULL;
         v = realloc_valueseq(v2, num_distinct_vals);
     }
 
@@ -184,27 +186,27 @@ int index_of_value(const valueseq_t *const v, const value_t *const value) {
     return res;
 }
 
-variablevals_t *alloc_variablevals(const int num_vars) {
+variablevals_t *alloc_variablevals(const int num_vars, const int num_units) {
     size_t size = sizeof(variablevals_t) + num_vars * sizeof(valueseq_t*);
     variablevals_t *varvals = malloc(size);
     varvals->memsize = size;
     varvals->num_vars = num_vars;
     memset(varvals->vars, 0,  num_vars * sizeof(valueseq_t*));
+    varvals->id_pool = allocate_intpool(num_units * num_vars);
     return varvals;
 }
 
 void free_variablevals(variablevals_t *varvals) {
     for (int i = 0; i < varvals->num_vars; i++)
         free_valueseq(varvals->vars[i]);
+    free_intpool(varvals->id_pool);
     free(varvals);
 }
 
 variablevals_t *to_variablevals(const unitseq_t *const u) {
-    variablevals_t *varvals = alloc_variablevals(u->num_vals);
-
+    variablevals_t *varvals = alloc_variablevals(u->num_vals, u->num_units);
     for (int i = 0; i < varvals->num_vars; i++)
-        varvals->vars[i] = to_valueseq(u, i);
-
+        varvals->vars[i] = to_valueseq(u, i, varvals->id_pool);
     return varvals;
 }
 
