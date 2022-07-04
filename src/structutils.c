@@ -21,7 +21,9 @@ unit_t *get_unit(const unitseq_t *const unitseq, const int index) {
 }
 
 valueseq_t *alloc_valueseq(const int num_values) {
-    valueseq_t *v = malloc(sizeof(valueseq_t) + num_values * sizeof(value_t));
+    size_t size = sizeof(valueseq_t) + num_values * sizeof(value_t);
+    valueseq_t *v = malloc(size);
+    v->memsize = size;
     v->len = num_values;
     for (int i = 0; i < num_values; i++)
         v->vals[i].num_units = 0;
@@ -42,7 +44,9 @@ valueseq_t *realloc_valueseq(valueseq_t *v, int num_values) {
             }
         }
 
-        v = (valueseq_t *)realloc(v, sizeof(valueseq_t) + num_values * sizeof(value_t));
+        size_t new_size = sizeof(valueseq_t) + num_values * sizeof(value_t);
+        v = (valueseq_t *)realloc(v, new_size);
+        v->memsize = new_size;
         v->len = num_values;
 
         if (num_added > 0) {
@@ -181,21 +185,17 @@ int index_of_value(const valueseq_t *const v, const value_t *const value) {
 }
 
 variablevals_t *alloc_variablevals(const int num_vars) {
-    variablevals_t *varvals =
-        malloc(sizeof(variablevals_t) + num_vars * sizeof(valueseq_t*));
-
+    size_t size = sizeof(variablevals_t) + num_vars * sizeof(valueseq_t*);
+    variablevals_t *varvals = malloc(size);
+    varvals->memsize = size;
     varvals->num_vars = num_vars;
-
-    for (int i = 0; i < num_vars; i++)
-        varvals->vars[i] = NULL;
-
+    memset(varvals->vars, 0,  num_vars * sizeof(valueseq_t*));
     return varvals;
 }
 
 void free_variablevals(variablevals_t *varvals) {
     for (int i = 0; i < varvals->num_vars; i++)
         free_valueseq(varvals->vars[i]);
-
     free(varvals);
 }
 
@@ -372,4 +372,32 @@ void free_strata(strata_t *strata) {
     free_strata_stats(strata->strata_stats);
     strata->strata_stats = NULL;
     free(strata);
+}
+
+intpool_t *allocate_intpool(int num_slots) {
+    size_t size = sizeof(intpool_t) + num_slots * sizeof(int);
+    intpool_t *res = malloc(size);
+    res->memsize = size;
+    res->num_slots = num_slots;
+    res->next_slot = 0;
+    return res;
+}
+
+intpool_t *rellocate_intpool(intpool_t *pool, int num_slots) {
+    size_t new_size = sizeof(intpool_t) + num_slots * sizeof(int);
+    intpool_t *res = malloc(new_size);
+    res->memsize = new_size;
+    res->num_slots = num_slots;
+    if (res->next_slot > num_slots)
+        res->next_slot = num_slots;
+
+    return res;
+}
+
+void free_intpool(intpool_t *pool) {
+    free(pool);
+}
+
+int *intpool_get_pointer(intpool_t *pool, int index) {
+    return &pool->slots[index];
 }

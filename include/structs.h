@@ -52,11 +52,20 @@ typedef struct value {
 } value_t;
 
 typedef struct valueseq {
+    size_t memsize;
     int len;
     value_t vals[0];
 } valueseq_t;
 
 typedef struct variablevals {
+    size_t memsize;
     int num_vars;
     valueseq_t *vars[0];
 } variablevals_t;
+
+typedef struct intpool {
+    size_t memsize;
+    int num_slots;
+    int next_slot;
+    int slots[0];
+} intpool_t;

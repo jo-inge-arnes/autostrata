@@ -32,3 +32,8 @@ void alloc_stratum_unit_ids(stratum_t *s, int num_units);
 void shrink_stratum_unit_ids(stratum_t *s, int num_units);
 void free_stratum_unit_ids(stratum_t *s);
 void free_strata(strata_t *strata);
+
+intpool_t *allocate_intpool(int num_slots);
+intpool_t *rellocate_intpool(intpool_t *pool, int num_slots);
+void free_intpool(intpool_t *pool);
+int *intpool_get_pointer(intpool_t *pool, int index);
