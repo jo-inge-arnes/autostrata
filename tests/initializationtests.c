@@ -206,6 +206,13 @@ int test_init_strata_stats(void) {
             printf("\texpected has_all_groups for stats_total to be true but it was false\n");
             res--;
         }
+
+        if (s->strata_stats->stats_total->unit_count != u->num_units) {
+            printf("\texpected unit_count for stats_total to be %d but got %d\n",
+                u->num_units,
+                s->strata_stats->stats_total->unit_count);
+            res--;
+        }
     }
 
     free_strata(s);
@@ -213,7 +220,7 @@ int test_init_strata_stats(void) {
     free_unitseq(u);
 
     return res;
-    }
+}
 
 int test_init_strata_stats_group_counts(void) {
     printf("%s\n", __func__);
