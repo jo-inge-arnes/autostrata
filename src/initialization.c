@@ -93,3 +93,25 @@ strata_t *init_strata(unitseq_t *u, variablevals_t *v, const int num_groups) {
     refresh_strata_stats_attributes(strata->strata_stats);
     return strata;
 }
+
+edges_t *init_edges(variablevals_t *v) {
+    int num_edges = 0;
+    for (int i = 0; i < v->num_vars; i++)
+        num_edges += v->vars[i]->len;
+    edges_t *edges = alloc_edges(num_edges);
+
+    int cur_index = 0;
+    edge_t *edge;
+
+    for (int i = 0; i < edges->num_slots; i++) {
+        for (int j = 0; i < v->vars[i]->len; j++) {
+            edge = &edges->slots[cur_index];
+            edge->variable_index = i;
+            edge->value_index = j;
+            edge->active = true;
+            cur_index++;
+        }
+    }
+
+    return edges;
+}

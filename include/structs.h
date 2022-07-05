@@ -74,3 +74,14 @@ typedef struct variablevals {
     valueseq_t *vars[0];
 } variablevals_t;
 
+typedef struct edge {
+    int variable_index;
+    int value_index;
+    bool active;
+} edge_t;
+
+typedef struct edges {
+    size_t memsize;
+    int num_slots;
+    edge_t slots[0];
+} edges_t;

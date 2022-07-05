@@ -42,3 +42,6 @@ intpool_t *allocate_intpool(int num_slots);
 intpool_t *rellocate_intpool(intpool_t *pool, int num_slots);
 void free_intpool(intpool_t *pool);
 int *intpool_get_pointer(intpool_t *pool, int index);
+
+edges_t *alloc_edges(int num_edges);
+void free_edges(edges_t *edges);

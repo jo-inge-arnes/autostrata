@@ -440,3 +440,16 @@ void free_intpool(intpool_t *pool) {
 int *intpool_get_pointer(intpool_t *pool, int index) {
     return &pool->slots[index];
 }
+
+edges_t *alloc_edges(int num_edges) {
+    size_t size = sizeof(edges_t) + num_edges * sizeof(edge_t);
+    edges_t *edges = malloc(size);
+    edges->memsize = size;
+    edges->num_slots = num_edges;
+    memset(edges->slots, 0, sizeof(num_edges * sizeof(edge_t)));
+    return edges;
+}
+
+void free_edges(edges_t *edges) {
+    free(edges);
+}
