@@ -45,3 +45,8 @@ int *intpool_get_pointer(intpool_t *pool, int index);
 
 edges_t *alloc_edges(int num_edges);
 void free_edges(edges_t *edges);
+
+stratumpairs_t *alloc_stratumpairs(int num_pairs, int num_groups);
+void free_stratumpairs(stratumpairs_t *pairs);
+size_t stratumpair_size(int num_pairs);
+stratumpair_t *get_stratum_pair(stratumpairs_t *pairs, int index);

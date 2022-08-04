@@ -453,3 +453,31 @@ edges_t *alloc_edges(int num_edges) {
 void free_edges(edges_t *edges) {
     free(edges);
 }
+
+size_t stratumpair_size(int num_groups) {
+    return sizeof(stratumpair_t) + num_groups * sizeof(int);
+}
+
+stratumpairs_t *alloc_stratumpairs(int num_pairs, int num_groups) {
+    size_t pair_size = stratumpair_size(num_groups);
+    size_t size =
+        sizeof(stratumpairs_t) + num_pairs * (pair_size + sizeof(int));
+    stratumpairs_t *pairs = malloc(size);
+    pairs->memsize = size;
+    pairs->pair_size = pair_size;
+    pairs->num_pairs = num_pairs;
+    pairs->num_groups = num_groups;
+    memset(pairs->summed_group_match_incs, 0, num_pairs * sizeof(int));
+    memset(pairs->pairs, 0, num_pairs * pair_size);
+    for (int i = 0; i < num_pairs; i ++)
+        get_stratum_pair(pairs, i)->num_groups = num_groups;
+    return pairs;
+}
+
+void free_stratumpairs(stratumpairs_t *pairs) {
+    free(pairs);
+}
+
+stratumpair_t *get_stratum_pair(stratumpairs_t *pairs, int index) {
+    return (stratumpair_t *) &pairs->pairs[index * pairs->pair_size];
+}

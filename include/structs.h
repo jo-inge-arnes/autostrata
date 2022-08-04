@@ -33,6 +33,23 @@ typedef struct stratastats {
     char slots[0];
 } stratastats_t;
 
+typedef struct varbounds {
+    int lower_index;
+    int upper_index;
+} varbounds_t;
+
+typedef struct stratumbounds {
+    int num_vars;
+    varbounds_t var_bounds[0];
+} stratumbounds_t;
+
+typedef struct stratabounds {
+    size_t memsize;
+    int num_slots;
+    int num_vars;
+    char slots[0];
+} stratabounds_t;
+
 typedef struct stratum {
     int id;
     int num_units; // not equal for all instances, but doesn't change
@@ -74,10 +91,27 @@ typedef struct variablevals {
     valueseq_t *vars[0];
 } variablevals_t;
 
+typedef struct stratumpair {
+    int lower_id;
+    int upper_id;
+    int num_groups;
+    int group_match_incs[0]; // Increased number of matched per group if merged
+} stratumpair_t;
+
+typedef struct stratumpairs {
+    size_t memsize;
+    size_t pair_size;
+    int num_pairs;
+    int num_groups;
+    int summed_group_match_incs[0];
+    char pairs[0];
+} stratumpairs_t;
+
 typedef struct edge {
     int variable_index;
     int value_index;
     bool active;
+    stratum_pairs_t *stratum_pairs;
 } edge_t;
 
 typedef struct edges {
