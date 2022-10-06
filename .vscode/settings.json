@@ -3,6 +3,8 @@
         "*.rmd": "markdown",
         "stratcache.h": "c",
         "stashing.h": "c",
-        "structutilstests.h": "c"
+        "structutilstests.h": "c",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }
