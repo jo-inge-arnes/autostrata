@@ -10,7 +10,7 @@ rawunits_t *get_randomunits(size_t unit_cnt, size_t covar_cnt, size_t group_cnt)
     units->covar_cnt = covar_cnt;
     units->group_cnt = group_cnt;
 
-    int max_val = unit_cnt / 2;
+    int max_val = unit_cnt / 3;
     float *row;
     for (size_t i = 0; i < unit_cnt; i++) {
         row = &units->data[i * col_cnt];

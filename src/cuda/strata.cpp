@@ -85,8 +85,8 @@ strata_t *strata_from_sorted_rawunits(rawunits_t *units) {
             set_stratum_covars(strata, cur_index, units, i);
         }
 
-        inc_stratum_group_cnt(strata, cur_index, group, 1);
         group = get_rawunit_group(units, i);
+        inc_stratum_group_cnt(strata, cur_index, group, 1);
         prev_unit = cur_unit;
     }
 
