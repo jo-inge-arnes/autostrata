@@ -11,12 +11,36 @@ stratamappings_t *allocate_stratamappings(size_t num_entries) {
     return sm;
 }
 
+stratamappings_t *shrink_stratamappings(stratamappings_t *sm) {
+    size_t new_cnt = sm->entries_cnt;
+
+    if (new_cnt < sm->allocated_cnt) {
+        sm = (stratamappings_t*)
+            realloc(sm, sizeof(stratamappings_t) + sizeof(stratamapping_t) * new_cnt);
+        sm->allocated_cnt = new_cnt;
+    }
+
+    return sm;
+}
+
 strataindices_t *allocate_strataindices(size_t num_indices) {
     strataindices_t *sp = (strataindices_t*)
         malloc(sizeof(strataindices_t) + sizeof(size_t) * num_indices);
     sp->allocated_cnt = num_indices;
     sp->indices_cnt = 0;
     memset(sp->indices, 0, sizeof(size_t) * num_indices);
+    return sp;
+}
+
+strataindices_t *shrink_strataindices(strataindices_t *sp) {
+    size_t new_cnt = sp->indices_cnt;
+
+    if (new_cnt < sp->allocated_cnt) {
+        sp = (strataindices_t*)
+            realloc(sp, sizeof(strataindices_t) + sizeof(size_t) * new_cnt);
+        sp->allocated_cnt = new_cnt;
+    }
+
     return sp;
 }
 

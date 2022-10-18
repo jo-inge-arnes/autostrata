@@ -114,6 +114,8 @@ int main(int argc, char **argv) {
         free(sorted);
     }
 
+    strata_maps = shrink_stratamappings(strata_maps);
+    strata_ixs = shrink_strataindices(strata_ixs);
 
     printf("Covar maps indices:\n");
     for (size_t i = 0; i < strata->covar_cnt; i++)

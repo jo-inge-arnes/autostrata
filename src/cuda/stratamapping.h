@@ -26,5 +26,9 @@ typedef struct valueindex {
 } valueindex_t;
 
 stratamappings_t *allocate_stratamappings(size_t num_mappings);
+stratamappings_t *shrink_stratamappings(stratamappings_t *sm);
+
 strataindices_t *allocate_strataindices(size_t num_indices);
+strataindices_t *shrink_strataindices(strataindices_t *sp);
+
 valueindex_t *index_sort(strata_t *strata, size_t covar_index);
