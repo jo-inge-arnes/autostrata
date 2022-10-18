@@ -75,7 +75,12 @@ int main(int argc, char **argv) {
     float *stratum_vals;
     stratamapping_t *cur_mapping;
 
+    size_t *covar_map_indices =
+        (size_t*)malloc(sizeof(size_t) * strata->covar_cnt);
+
     for (size_t covar_index = 0; covar_index < strata->covar_cnt; covar_index++) {
+        covar_map_indices[covar_index] = strata_maps->entries_cnt;
+
         valueindex_t *sorted = index_sort(strata, covar_index);
         stratum_vals = get_stratum_start(strata, sorted[0].index);
         cur_val = stratum_vals[covar_index];
@@ -110,12 +115,18 @@ int main(int argc, char **argv) {
     }
 
 
+    printf("Covar maps indices:\n");
+    for (size_t i = 0; i < strata->covar_cnt; i++)
+        printf("\tCovar: %zu, Start index: %zu\n", i, covar_map_indices[i]);
+    printf("\n");
+
     printf("Strata maps\n");
     print_stratamaps(strata_maps, strata_ixs, strata);
     printf("\n");
 
     free(strata_ixs);
     free(strata_maps);
+    free(covar_map_indices);
 
     free(strata);
     free(units);
