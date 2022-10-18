@@ -30,6 +30,27 @@ void print_strata(strata *strata) {
     }
 }
 
+void print_stratamaps(stratamappings_t *strata_maps, strataindices_t *strata_ixs, strata_t *strata) {
+    printf("Entries: %zu, allocated: %zu\n",
+        strata_maps->entries_cnt,
+        strata_maps->allocated_cnt);
+
+    for (size_t i = 0; i < strata_maps->entries_cnt; i++) {
+        printf("Entry: %zu\n", i);
+        stratamapping_t *cur_mapping = &strata_maps->entries[i];
+        printf("\tValue: %.2f, start: %zu, entries: %zu\n",
+            cur_mapping->value,
+            cur_mapping->start_index,
+            cur_mapping->entries_cnt);
+        printf("\tStratum indices:\n");
+
+        for (size_t j = 0; j < cur_mapping->entries_cnt; j++) {
+            printf("\t\t%zu\n",
+                strata_ixs->indices[cur_mapping->start_index + j]);
+        }
+    }
+}
+
 int main(int argc, char **argv) {
     srand(time(NULL));
 
@@ -45,6 +66,56 @@ int main(int argc, char **argv) {
     strata_t *strata = strata_from_sorted_rawunits(units);
     printf("Strata\n");
     print_strata(strata);
+    printf("\n");
+
+    stratamappings_t *strata_maps = allocate_stratamappings(strata->stratum_cnt * strata->covar_cnt);
+    strataindices_t *strata_ixs = allocate_strataindices(strata->stratum_cnt * strata->covar_cnt);
+
+    float cur_val, prev_val;
+    float *stratum_vals;
+    stratamapping_t *cur_mapping;
+
+    for (size_t covar_index = 0; covar_index < strata->covar_cnt; covar_index++) {
+        valueindex_t *sorted = index_sort(strata, covar_index);
+        stratum_vals = get_stratum_start(strata, sorted[0].index);
+        cur_val = stratum_vals[covar_index];
+        cur_mapping = &strata_maps->entries[strata_maps->entries_cnt];
+        strata_maps->entries_cnt++;
+        cur_mapping->value = cur_val;
+        cur_mapping->start_index = strata_ixs->indices_cnt;
+        cur_mapping->entries_cnt++;
+        strata_ixs->indices[strata_ixs->indices_cnt] = sorted[0].index;
+        strata_ixs->indices_cnt++;
+        prev_val = cur_val;
+
+        for (size_t i = 1; i < strata->stratum_cnt; i++) {
+            stratum_vals = get_stratum_start(strata, sorted[i].index);
+            cur_val = stratum_vals[covar_index];
+
+            if (cur_val != prev_val) {
+                cur_mapping = &strata_maps->entries[strata_maps->entries_cnt];
+                strata_maps->entries_cnt++;
+                cur_mapping->value = cur_val;
+                cur_mapping->start_index = strata_ixs->indices_cnt;
+            }
+
+            cur_mapping->entries_cnt++;
+            strata_ixs->indices[strata_ixs->indices_cnt] = sorted[i].index;
+            strata_ixs->indices_cnt++;
+
+            prev_val = cur_val;
+        }
+
+        free(sorted);
+    }
+
+
+    printf("Strata maps\n");
+    print_stratamaps(strata_maps, strata_ixs, strata);
+    printf("\n");
+
+    free(strata_ixs);
+    free(strata_maps);
 
     free(strata);
     free(units);
