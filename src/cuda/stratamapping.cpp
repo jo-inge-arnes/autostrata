@@ -74,6 +74,33 @@ valueindex_t *index_sort(strata_t *strata, size_t covar_index) {
     return sorted;
 }
 
+int size_t_cmp(const void * a, const void * b) {
+    int res;
+    size_t a_size = *(size_t*)a;
+    size_t b_size = *(size_t*)b;
+
+    if (a_size < b_size)
+        res = -1;
+    else if (a_size > b_size)
+        res = 1;
+    else
+        res = 0;
+
+    return res;
+}
+
+void sort_covar_value_strata_ixs(stratamappings_t *strata_maps, strataindices_t *strata_ixs) {
+    stratamapping_t *cur_mapping;
+    for (size_t i = 0; i < strata_maps->entries_cnt; i++) {
+        cur_mapping = &strata_maps->entries[i];
+        qsort(&strata_ixs->indices[cur_mapping->start_index],
+            cur_mapping->entries_cnt,
+            sizeof(size_t),
+            size_t_cmp);
+    }
+}
+
+
 covarstratamap_t *build_covarstratamap(strata_t *strata) {
     stratamappings_t *strata_maps = allocate_stratamappings(strata->stratum_cnt * strata->covar_cnt);
     strataindices_t *strata_ixs = allocate_strataindices(strata->stratum_cnt * strata->covar_cnt);
@@ -120,6 +147,8 @@ covarstratamap_t *build_covarstratamap(strata_t *strata) {
 
         free(sorted);
     }
+
+    sort_covar_value_strata_ixs(strata_maps, strata_ixs);
 
     strata_maps = shrink_stratamappings(strata_maps);
     strata_ixs = shrink_strataindices(strata_ixs);
