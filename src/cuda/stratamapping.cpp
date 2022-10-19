@@ -73,3 +73,69 @@ valueindex_t *index_sort(strata_t *strata, size_t covar_index) {
 
     return sorted;
 }
+
+covarstratamap_t *build_covarstratamap(strata_t *strata) {
+    stratamappings_t *strata_maps = allocate_stratamappings(strata->stratum_cnt * strata->covar_cnt);
+    strataindices_t *strata_ixs = allocate_strataindices(strata->stratum_cnt * strata->covar_cnt);
+
+    float cur_val, prev_val;
+    float *stratum_vals;
+    stratamapping_t *cur_mapping;
+
+    size_t *covar_map_indices =
+        (size_t*)malloc(sizeof(size_t) * strata->covar_cnt);
+
+    for (size_t covar_index = 0; covar_index < strata->covar_cnt; covar_index++) {
+        covar_map_indices[covar_index] = strata_maps->entries_cnt;
+
+        valueindex_t *sorted = index_sort(strata, covar_index);
+        stratum_vals = get_stratum_start(strata, sorted[0].index);
+        cur_val = stratum_vals[covar_index];
+        cur_mapping = &strata_maps->entries[strata_maps->entries_cnt];
+        strata_maps->entries_cnt++;
+        cur_mapping->value = cur_val;
+        cur_mapping->start_index = strata_ixs->indices_cnt;
+        cur_mapping->entries_cnt++;
+        strata_ixs->indices[strata_ixs->indices_cnt] = sorted[0].index;
+        strata_ixs->indices_cnt++;
+        prev_val = cur_val;
+
+        for (size_t i = 1; i < strata->stratum_cnt; i++) {
+            stratum_vals = get_stratum_start(strata, sorted[i].index);
+            cur_val = stratum_vals[covar_index];
+
+            if (cur_val != prev_val) {
+                cur_mapping = &strata_maps->entries[strata_maps->entries_cnt];
+                strata_maps->entries_cnt++;
+                cur_mapping->value = cur_val;
+                cur_mapping->start_index = strata_ixs->indices_cnt;
+            }
+
+            cur_mapping->entries_cnt++;
+            strata_ixs->indices[strata_ixs->indices_cnt] = sorted[i].index;
+            strata_ixs->indices_cnt++;
+
+            prev_val = cur_val;
+        }
+
+        free(sorted);
+    }
+
+    strata_maps = shrink_stratamappings(strata_maps);
+    strata_ixs = shrink_strataindices(strata_ixs);
+
+    covarstratamap_t *res = (covarstratamap_t*)malloc(sizeof(covarstratamap_t));
+    res->covar_map_indices = covar_map_indices;
+    res->strata_maps = strata_maps;
+    res->strata_ixs = strata_ixs;
+    res->strata = strata;
+
+    return res;
+}
+
+void free_covarstratamap(covarstratamap_t *covar_strata_maps) {
+    free(covar_strata_maps->covar_map_indices);
+    free(covar_strata_maps->strata_maps);
+    free(covar_strata_maps->strata_ixs);
+    free(covar_strata_maps);
+}

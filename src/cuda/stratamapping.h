@@ -25,6 +25,14 @@ typedef struct valueindex {
     float value;
 } valueindex_t;
 
+typedef struct covarstratamap {
+    size_t *covar_map_indices;
+    stratamappings_t *strata_maps;
+    strataindices_t *strata_ixs;
+    strata_t *strata;
+} covarstratamap_t;
+
+
 stratamappings_t *allocate_stratamappings(size_t num_mappings);
 stratamappings_t *shrink_stratamappings(stratamappings_t *sm);
 
@@ -32,3 +40,6 @@ strataindices_t *allocate_strataindices(size_t num_indices);
 strataindices_t *shrink_strataindices(strataindices_t *sp);
 
 valueindex_t *index_sort(strata_t *strata, size_t covar_index);
+
+covarstratamap_t *build_covarstratamap(strata_t *strata);
+void free_covarstratamap(covarstratamap_t *covar_strata_maps);
