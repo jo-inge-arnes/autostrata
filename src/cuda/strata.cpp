@@ -97,3 +97,20 @@ strata_t *strata_from_sorted_rawunits(rawunits_t *units) {
 
     return(strata);
 }
+
+bool are_equal_except(strata_t *strata, size_t a_index, size_t b_index, size_t except_covar) {
+    bool are_equal = true;
+
+    float *a_vals = get_stratum_start(strata, a_index);
+    float *b_vals = get_stratum_start(strata, b_index);
+
+    for (size_t i = 0; i < strata->covar_cnt; i++) {
+        if (i != except_covar && (a_vals[i] != b_vals[i])) {
+            are_equal = false;
+            break;
+        }
+    }
+
+    return are_equal;
+}
+

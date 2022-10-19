@@ -6,15 +6,15 @@
     "configurations": [
         {
             "name": "gcc build and debug active file",
-            "type": "cppdbg",
+            "type": "cuda-gdb",
             "request": "launch",
-            "program": "${workspaceFolder}/tests/tests",
+            "program": "${workspaceFolder}/src/cuda/main",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/tests",
+            "cwd": "${workspaceFolder}/src/cuda",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
+            "MIMode": "cuda-gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -23,7 +23,7 @@
                 }
             ],
             "preLaunchTask": "tasks",
-            "miDebuggerPath": "/usr/bin/gdb"
+            "miDebuggerPath": "/usr/bin/cuda-gdb"
         }
     ]
 }

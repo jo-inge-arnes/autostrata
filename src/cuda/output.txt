@@ -1,45 +1,44 @@
 Raw units
-0: [0.00, 2.00, 3.00, 1.00]
-1: [0.00, 4.00, 5.00, 1.00]
-2: [1.00, 5.00, 2.00, 0.00]
-3: [2.00, 0.00, 4.00, 1.00]
-4: [2.00, 3.00, 0.00, 0.00]
-5: [2.00, 3.00, 0.00, 0.00]
-6: [2.00, 3.00, 2.00, 0.00]
-7: [2.00, 3.00, 5.00, 1.00]
-8: [2.00, 4.00, 4.00, 0.00]
-9: [3.00, 3.00, 4.00, 0.00]
-10: [3.00, 4.00, 3.00, 1.00]
-11: [3.00, 5.00, 3.00, 1.00]
-12: [4.00, 1.00, 2.00, 0.00]
-13: [4.00, 3.00, 0.00, 1.00]
-14: [4.00, 3.00, 5.00, 0.00]
-15: [4.00, 4.00, 2.00, 0.00]
-16: [5.00, 1.00, 2.00, 1.00]
-17: [5.00, 4.00, 0.00, 0.00]
-18: [5.00, 5.00, 0.00, 0.00]
-19: [5.00, 5.00, 5.00, 1.00]
+0: [0.00, 1.00, 4.00, 0.00]
+1: [0.00, 2.00, 0.00, 1.00]
+2: [0.00, 2.00, 0.00, 0.00]
+3: [0.00, 2.00, 1.00, 0.00]
+4: [0.00, 2.00, 5.00, 0.00]
+5: [0.00, 4.00, 4.00, 1.00]
+6: [0.00, 5.00, 3.00, 1.00]
+7: [1.00, 0.00, 2.00, 0.00]
+8: [1.00, 1.00, 1.00, 1.00]
+9: [1.00, 3.00, 0.00, 0.00]
+10: [2.00, 1.00, 0.00, 0.00]
+11: [2.00, 1.00, 1.00, 1.00]
+12: [2.00, 2.00, 3.00, 1.00]
+13: [3.00, 0.00, 0.00, 0.00]
+14: [3.00, 0.00, 0.00, 0.00]
+15: [3.00, 1.00, 1.00, 1.00]
+16: [3.00, 2.00, 1.00, 0.00]
+17: [4.00, 0.00, 5.00, 1.00]
+18: [4.00, 5.00, 0.00, 0.00]
+19: [5.00, 1.00, 3.00, 1.00]
 
 Strata
-0: [0.00, 2.00, 3.00, 0.00, 1.00, 1.00]
-1: [0.00, 4.00, 5.00, 0.00, 1.00, 1.00]
-2: [1.00, 5.00, 2.00, 1.00, 0.00, 1.00]
-3: [2.00, 0.00, 4.00, 0.00, 1.00, 1.00]
-4: [2.00, 3.00, 0.00, 2.00, 0.00, 1.00]
-5: [2.00, 3.00, 2.00, 1.00, 0.00, 1.00]
-6: [2.00, 3.00, 5.00, 0.00, 1.00, 1.00]
-7: [2.00, 4.00, 4.00, 1.00, 0.00, 1.00]
-8: [3.00, 3.00, 4.00, 1.00, 0.00, 1.00]
-9: [3.00, 4.00, 3.00, 0.00, 1.00, 1.00]
-10: [3.00, 5.00, 3.00, 0.00, 1.00, 1.00]
-11: [4.00, 1.00, 2.00, 1.00, 0.00, 1.00]
-12: [4.00, 3.00, 0.00, 0.00, 1.00, 1.00]
-13: [4.00, 3.00, 5.00, 1.00, 0.00, 1.00]
-14: [4.00, 4.00, 2.00, 1.00, 0.00, 1.00]
-15: [5.00, 1.00, 2.00, 0.00, 1.00, 1.00]
-16: [5.00, 4.00, 0.00, 1.00, 0.00, 1.00]
-17: [5.00, 5.00, 0.00, 1.00, 0.00, 1.00]
-18: [5.00, 5.00, 5.00, 0.00, 1.00, 1.00]
+0: [0.00, 1.00, 4.00, 1.00, 0.00, 1.00]
+1: [0.00, 2.00, 0.00, 1.00, 1.00, 1.00]
+2: [0.00, 2.00, 1.00, 1.00, 0.00, 1.00]
+3: [0.00, 2.00, 5.00, 1.00, 0.00, 1.00]
+4: [0.00, 4.00, 4.00, 0.00, 1.00, 1.00]
+5: [0.00, 5.00, 3.00, 0.00, 1.00, 1.00]
+6: [1.00, 0.00, 2.00, 1.00, 0.00, 1.00]
+7: [1.00, 1.00, 1.00, 0.00, 1.00, 1.00]
+8: [1.00, 3.00, 0.00, 1.00, 0.00, 1.00]
+9: [2.00, 1.00, 0.00, 1.00, 0.00, 1.00]
+10: [2.00, 1.00, 1.00, 0.00, 1.00, 1.00]
+11: [2.00, 2.00, 3.00, 0.00, 1.00, 1.00]
+12: [3.00, 0.00, 0.00, 2.00, 0.00, 1.00]
+13: [3.00, 1.00, 1.00, 0.00, 1.00, 1.00]
+14: [3.00, 2.00, 1.00, 1.00, 0.00, 1.00]
+15: [4.00, 0.00, 5.00, 0.00, 1.00, 1.00]
+16: [4.00, 5.00, 0.00, 1.00, 0.00, 1.00]
+17: [5.00, 1.00, 3.00, 0.00, 1.00, 1.00]
 
 Covar maps indices:
 	Covar: 0, Start index: 0
@@ -47,113 +46,118 @@ Covar maps indices:
 	Covar: 2, Start index: 12
 
 Strata maps
-Entries: 17, allocated: 17
+Entries: 18, allocated: 18
 Entry: 0
-	Value: 0.00, start: 0, entries: 2
+	Value: 0.00, start: 0, entries: 6
 	Stratum indices:
 		0
 		1
+		2
+		3
+		4
+		5
 Entry: 1
-	Value: 1.00, start: 2, entries: 1
+	Value: 1.00, start: 6, entries: 3
 	Stratum indices:
-		2
-Entry: 2
-	Value: 2.00, start: 3, entries: 5
-	Stratum indices:
-		3
-		4
-		5
 		6
 		7
-Entry: 3
-	Value: 3.00, start: 8, entries: 3
-	Stratum indices:
 		8
+Entry: 2
+	Value: 2.00, start: 9, entries: 3
+	Stratum indices:
 		9
 		10
-Entry: 4
-	Value: 4.00, start: 11, entries: 4
-	Stratum indices:
 		11
+Entry: 3
+	Value: 3.00, start: 12, entries: 3
+	Stratum indices:
 		12
 		13
 		14
-Entry: 5
-	Value: 5.00, start: 15, entries: 4
+Entry: 4
+	Value: 4.00, start: 15, entries: 2
 	Stratum indices:
 		15
 		16
+Entry: 5
+	Value: 5.00, start: 17, entries: 1
+	Stratum indices:
 		17
-		18
 Entry: 6
-	Value: 0.00, start: 19, entries: 1
+	Value: 0.00, start: 18, entries: 3
 	Stratum indices:
-		3
-Entry: 7
-	Value: 1.00, start: 20, entries: 2
-	Stratum indices:
-		11
+		6
+		12
 		15
-Entry: 8
-	Value: 2.00, start: 22, entries: 1
+Entry: 7
+	Value: 1.00, start: 21, entries: 6
 	Stratum indices:
 		0
-Entry: 9
-	Value: 3.00, start: 23, entries: 6
-	Stratum indices:
-		4
-		5
-		6
-		8
-		12
-		13
-Entry: 10
-	Value: 4.00, start: 29, entries: 5
-	Stratum indices:
-		1
 		7
 		9
-		14
-		16
-Entry: 11
-	Value: 5.00, start: 34, entries: 4
-	Stratum indices:
-		2
 		10
+		13
 		17
-		18
-Entry: 12
-	Value: 0.00, start: 38, entries: 4
+Entry: 8
+	Value: 2.00, start: 27, entries: 5
 	Stratum indices:
-		4
-		12
-		16
-		17
-Entry: 13
-	Value: 2.00, start: 42, entries: 5
-	Stratum indices:
+		1
 		2
-		5
+		3
 		11
 		14
-		15
+Entry: 9
+	Value: 3.00, start: 32, entries: 1
+	Stratum indices:
+		8
+Entry: 10
+	Value: 4.00, start: 33, entries: 1
+	Stratum indices:
+		4
+Entry: 11
+	Value: 5.00, start: 34, entries: 2
+	Stratum indices:
+		5
+		16
+Entry: 12
+	Value: 0.00, start: 36, entries: 5
+	Stratum indices:
+		1
+		8
+		9
+		12
+		16
+Entry: 13
+	Value: 1.00, start: 41, entries: 5
+	Stratum indices:
+		2
+		7
+		10
+		13
+		14
 Entry: 14
+	Value: 2.00, start: 46, entries: 1
+	Stratum indices:
+		6
+Entry: 15
 	Value: 3.00, start: 47, entries: 3
 	Stratum indices:
+		5
+		11
+		17
+Entry: 16
+	Value: 4.00, start: 50, entries: 2
+	Stratum indices:
 		0
-		9
-		10
-Entry: 15
-	Value: 4.00, start: 50, entries: 3
+		4
+Entry: 17
+	Value: 5.00, start: 52, entries: 2
 	Stratum indices:
 		3
-		7
-		8
-Entry: 16
-	Value: 5.00, start: 53, entries: 4
-	Stratum indices:
-		1
-		6
-		13
-		18
+		15
 
+For covariate_0 = 2.00, strata 10 and 7 are neighbours
+For covariate_0 = 3.00, strata 13 and 10 are neighbours
+For covariate_1 = 2.00, strata 14 and 13 are neighbours
+For covariate_2 = 1.00, strata 2 and 1 are neighbours
+For covariate_2 = 1.00, strata 10 and 9 are neighbours

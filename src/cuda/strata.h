@@ -27,3 +27,4 @@ size_t get_active_col_index(strata_t *strata);
 size_t get_stratum_size(strata_t *strata);
 size_t get_stratum_size_from_units(rawunits_t *units);
 strata_t *strata_from_sorted_rawunits(rawunits_t *units);
+bool are_equal_except(strata_t *strata, size_t a_index, size_t b_index, size_t except_covar);

@@ -82,6 +82,55 @@ int main(int argc, char **argv) {
     print_stratamaps(covar_strata_map);
     printf("\n");
 
+    // Find neighbour strata
+    for (size_t covar_index = 0; covar_index < strata->covar_cnt; covar_index++) {
+        size_t num_vals;
+        if (covar_index < strata->covar_cnt - 1) {
+            num_vals = covar_strata_map->covar_map_indices[covar_index + 1] -
+                covar_strata_map->covar_map_indices[covar_index];
+        } else {
+            num_vals = covar_strata_map->strata_maps->entries_cnt -
+                covar_strata_map->covar_map_indices[covar_index];
+        }
+
+        for (size_t value_index = 1; value_index < num_vals; value_index++) {
+
+            if (value_index > 0) {
+                size_t covar_offset =
+                    covar_strata_map->covar_map_indices[covar_index];
+                stratamapping_t *cur_mapping =
+                    &covar_strata_map->strata_maps->entries[covar_offset + value_index];
+
+                stratamapping_t *prev_mapping =
+                    &covar_strata_map->strata_maps->entries[covar_offset + value_index - 1];
+
+                size_t upper_stratum_index, lower_stratum_index;
+                for (size_t i = 0; i < cur_mapping->entries_cnt; i++) {
+                    upper_stratum_index =
+                        covar_strata_map->strata_ixs->indices[cur_mapping->start_index + i];
+
+                    for (size_t j = 0; j < prev_mapping->entries_cnt; j++) {
+                        lower_stratum_index =
+                            covar_strata_map->strata_ixs->indices[prev_mapping->start_index + j];
+
+                        if (are_equal_except(strata, upper_stratum_index, lower_stratum_index, covar_index)) {
+                            printf("For covariate_%zu = %.2f, strata %zu and %zu are neighbours\n",
+                                covar_index,
+                                cur_mapping->value,
+                                upper_stratum_index,
+                                lower_stratum_index
+                                );
+                        }
+                    }
+                }
+            } else {
+                fprintf(stderr,
+                    "No neighbour stratum possible on the lower side of the lowest edge "
+                    "for the given covariate.\n");
+            }
+        }
+    }
+
     free_covarstratamap(covar_strata_map);
 
     free(strata);
